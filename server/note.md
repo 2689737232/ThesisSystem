@@ -14,3 +14,24 @@ pymysql.install_as_MySQLdb()
 
 在models.py中创建模型类，使用`python manage.py migrate`将数据库状态与当前的模型集和迁移同步。  
 使用`python manage.py shell`启动 Python 交互式解释器。  
+
+
+### 安装 djangorestframework
+`pip install djangorestframework`  
+`pip install markdown`  
+`pip install django-filter`
+
+添加`rest_framework`到`INSTALLED_APPS`中去。  
+settings.py:
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'login.apps.LoginConfig'
+    'rest_framework'
+]
+```
