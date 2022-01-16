@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'login.apps.LoginConfig'
-    'rest_framework'
+    # 'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -84,7 +84,8 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD':'123456',
         'HOST':'localhost',
-        'PROT': '3306'
+        'PROT': '3306',
+        'CHARSET': 'utf8mb4'
     }
 }
 
@@ -111,13 +112,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
-
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

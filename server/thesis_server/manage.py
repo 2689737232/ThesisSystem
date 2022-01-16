@@ -3,6 +3,11 @@
 import os
 import sys
 
+# 相对于manage.py文件的相对路径
+module_path = [
+    "util"
+]
+
 
 def main():
     """Run administrative tasks."""
@@ -19,4 +24,6 @@ def main():
 
 
 if __name__ == '__main__':
+    for path in module_path:
+        sys.path.append(os.path.abspath(path))
     main()
