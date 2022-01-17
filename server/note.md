@@ -12,7 +12,8 @@ pymysql.install_as_MySQLdb()
 
 ### 创建数据模型
 
-在models.py中创建模型类，使用`python manage.py migrate`将数据库状态与当前的模型集和迁移同步。  
+在models.py中创建模型类，使用`python manage.py makemigrations `，`python manage.py migrate`.将数据库状态与当前的模型集和迁移同步。  
+在使用makemigrations后可以使用`python manage.py sqlmigrate xxx 0001`查看数据库创建脚本。  
 使用`python manage.py shell`启动 Python 交互式解释器。  
 
 
