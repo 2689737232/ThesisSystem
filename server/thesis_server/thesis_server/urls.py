@@ -16,14 +16,16 @@ Including another URLconf
 
 from turtle import home
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from django.http import HttpResponse
 from util.result import result
 from django.template import loader
+from .views import page_not_found,not_allowed
 
 urlpatterns = [
     path('', include('home.urls')),
     path('admin/', admin.site.urls),
     path('login/', include('login.urls')),
     path('test/', include('test_l.urls')),
-]
+] 
+handler404 = page_not_found

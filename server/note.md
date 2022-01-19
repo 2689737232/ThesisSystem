@@ -36,3 +36,39 @@ INSTALLED_APPS = [
     'rest_framework'
 ]
 ```
+
+### 模型
+
+如果自己在模型中添加了主键`id = models.BigAutoField(primary_key=True)`django不会再自动的添加主键。  
+
+### 配置静态文件地址
+
+在`settings.py`中配置
+```python
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.abspath("static")
+```
+再使用`python manage.py collectstatic`会将其他应用下的静态文件复制到`STATIC_ROOT`下。 
+
+### 自定义错误页面
+
+1. 设置`settings.py`中`DEBUG`为`False`
+1. 设置`settings.py`中`ALLOWED_HOSTS`
+3. 在url配置页面，设置如
+```python
+from .views import page_not_found
+
+urlpatterns = [
+    path('', include('home.urls')),
+    path('admin/', admin.site.urls),
+    path('login/', include('login.urls')),
+    path('test/', include('test_l.urls')),
+] 
+handler404 = page_not_found
+```
+views文件
+```python
+def page_not_found(request, exception):
+    print(request, "----------")
+    return HttpResponseNotFound(content="页面没有找到哦")
+```

@@ -5,6 +5,17 @@
    "version": "0.2.0",
    "configurations": [
       {
+         "name": "Python: Django",
+         "type": "python",
+         "request": "launch",
+         "program": "${workspaceFolder}\\server\\thesis_server\\manage.py",
+         "args": [
+            "runserver"
+         ],
+         "django": true,
+         "justMyCode": false
+      },
+      {
          "name": "Python: 使用 PID 连接",
          "type": "python",
          "request": "attach",
