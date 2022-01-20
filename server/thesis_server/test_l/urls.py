@@ -6,7 +6,8 @@ from django.http import HttpResponse
 
 
 urlpatterns = [
-    path('', views.index, name='detail'),
-    path('upload', views.upload_file, name='upload_file'),
-    re_path(r'^info/(?P<msg>\S{1,})/$', view=views.show_params)
+    path('', views.index_view, name='detail'),
+    path('upload', views.upload_file_view, name='upload_file'),
+    path('cbv-view', views.CBV_View.as_view(), name='cbv_view'),
+    re_path(r'^info/(?P<msg>\S{1,})/$', view=views.show_params_view)
 ]

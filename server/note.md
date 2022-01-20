@@ -72,3 +72,30 @@ def page_not_found(request, exception):
     print(request, "----------")
     return HttpResponseNotFound(content="页面没有找到哦")
 ```
+
+### 创建超级用户
+
+`python manage.py createsuperuser --email xxx@xx.com --username`
+
+### csrf
+
+https://docs.djangoproject.com/zh-hans/4.0/ref/csrf/
+
+解决1： 在请求中添加`headers: {'X-CSRFToken': csrftoken},`  
+解决2（针对函数视图）： 使用装饰器`from django.views.decorators.csrf import csrf_exempt`
+```python
+@require_POST
+@csrf_exempt
+def upload_file_view(request):
+    return result(message="上次成功")
+```
+解决3（针对类试图）：   `from django.utils.decorators import method_decorator` 和 `csrf_exempt`组合
+```python
+from django.views import View
+@method_decorator(csrf_exempt, name='dispatch')
+class CBV_View(View):
+    def get(self, request, *args, **kwords):
+        return result(message="使用cbv中的get请求")
+    def post(self, request, *args, **kwords):
+        return result(message="使用cbv中的post请求")
+```

@@ -16,16 +16,31 @@ Including another URLconf
 
 from turtle import home
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.http import HttpResponse
 from util.result import result
 from django.template import loader
 from .views import page_not_found,not_allowed
 
-urlpatterns = [
-    path('', include('home.urls')),
+from django.urls import include, path
+from rest_framework import routers
+from test_l import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+
+urls = [
+    path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('login/', include('login.urls')),
     path('test/', include('test_l.urls')),
+    path('api-test/', include('rest_framework.urls', namespace='rest_framework'))
+]
+
+urlpatterns = [
+    # path('', include('home.urls')),
+    path("api/v1/", include(urls))
 ] 
+
 handler404 = page_not_found
