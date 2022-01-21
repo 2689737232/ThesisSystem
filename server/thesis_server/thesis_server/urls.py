@@ -26,6 +26,7 @@ from django.urls import include, path
 from rest_framework import routers
 from test_l import views
 
+
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
@@ -40,7 +41,7 @@ urls = [
 
 urlpatterns = [
     # path('', include('home.urls')),
-    path("api/v1/", include(urls))
+    path("api/v1/", include(urls)),
 ] 
 
 handler404 = page_not_found

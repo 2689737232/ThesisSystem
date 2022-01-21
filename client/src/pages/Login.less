@@ -4,24 +4,52 @@
    .web-base-font;
    .full;
    .flex-center;
+   height      : 100vh;
    background-image: url("@/static/images/登录背景.jpg");
 
    .login-form {
       .bbox;
 
-      padding: 1rem;
-      width           : 70%;
-      height          : 60%;
+      padding         : 1rem 0;
+      width           : 80%;
+      // height          : 60%;
       background-color: rgba(240, 248, 255, 0.712);
       border-radius   : 3rem;
    }
-}
 
-.text-box {
-   .bbox;
+   .text-box {
+      h4:first-of-type {
+         margin-top: 2rem;
+      }
+   }
 
-   // h5 {
-   //    padding-left: 1rem;
-   //    text-align  : left;
-   // }
+   .forget-pwd,
+   .input-box {
+      width : 70%;
+      margin: 2rem auto;
+   }
+
+   .input-box {
+      margin-top: 2rem;
+
+      .input-item {
+         font-size: 1.3rem;
+         width    : 100%;
+         margin   : 1rem 0;
+      }
+
+      .btn-box {
+         .flex-right;
+
+         position: relative;
+         display : flex;
+
+
+         .btn-item {
+            margin: 0 1rem;
+         }
+      }
+   }
+
+
 }

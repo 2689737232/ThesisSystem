@@ -99,3 +99,9 @@ class CBV_View(View):
     def post(self, request, *args, **kwords):
         return result(message="使用cbv中的post请求")
 ```
+
+### 登录
+
+- 使用https传输
+- 使用bcrypt加密保存。
+https://github.com/pyca/bcrypt/
