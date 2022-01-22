@@ -1,0 +1,1 @@
+SECRET_KEY = "django-user--token-g3&hg%y#g#cx599dgtb6qxxi50l2@_asfg&3wr3&_6tp_2vs2dt41"

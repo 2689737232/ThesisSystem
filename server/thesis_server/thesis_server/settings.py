@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',  # 配置静态文件
-
-    'login.apps.LoginConfig',
+    
+    'user.apps.UserConfig',
     'test_l.apps.TestLConfig',
     'home.apps.HomeConfig',
     'rest_framework' # 添加rest_framework
@@ -94,7 +94,7 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test',
+        'NAME': 'thesis_system',
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': 'localhost',

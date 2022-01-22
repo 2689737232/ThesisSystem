@@ -1,7 +1,7 @@
 import { request } from "./base";
 
 export async function login(userNo: string, password: string) {
-   return await request.post("test/auth", {
+   return await request.post("user/auth", {
       userNo,
       password
    }).catch((err)=>{

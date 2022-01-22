@@ -105,3 +105,8 @@ class CBV_View(View):
 - 使用https传输
 - 使用bcrypt加密保存。
 https://github.com/pyca/bcrypt/
+
+### token
+- 使用pyjwt生成token
+参考
+https://blog.csdn.net/weixin_42134789/article/details/105898077

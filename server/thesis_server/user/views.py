@@ -1,60 +1,21 @@
-import code
-from email import message
-from rest_framework.views import APIView
-from test_l.serializers import UserSerializer, GroupSerializer
-from rest_framework import permissions
-from rest_framework import viewsets
-from django.contrib.auth.models import User, Group
 import bcrypt
 from django.views import View
 import json
 from django.http import HttpResponse
 from util.result import result, MyCode
-from util.tools import request_dict
 from django.views.decorators.http import require_http_methods, require_POST
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt  # 使用装饰器
+from django.views.decorators.csrf import csrf_exempt, csrf_protect  # 使用装饰器
 from .models import User as MyUser
-# 视图可以写成函数（FBV）、类（CBV）
+from rest_framework.views import APIView
+from util.tools import request_dict
+# Create your views here.
 
 
-def index_view(request):
-    return HttpResponse("传入的参数为 %s." % id)
-
-# 需要大写
-
-
-@require_http_methods(["GET", "POST"])
-def show_params_view(requset, msg):
-    return result(message=msg)
-
-
-@require_POST
-@csrf_exempt
-def upload_file_view(request):
-    return result(message="上次成功")
-
-
-# 写cbv时，请求是get执行get方法,同时需要继承django中的View类
-
-
-@method_decorator(csrf_exempt, name='dispatch')
-class CBV_View(View):
+@method_decorator(decorator=[csrf_exempt], name="dispatch")
+class Index(View):
     def get(self, request, *args, **kwords):
-        return result(message="使用cbv中的get请求")
-
-    def post(self, request, *args, **kwords):
-        return result(message="使用cbv中的post请求")
-
-
-class PublicKeyView(APIView):
-    def get(self, request, *args, **kwords):
-        return result("加密公钥", data={"public_key": "asgas5g45sag"})
-
-
-"""
- 加密密码
-"""
+        return result(message="用户接口")
 
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
@@ -69,11 +30,12 @@ class BcryptView(APIView):
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class AuthView(View):
+    # 登录
     def post(self, request, *args, **kwords):
         result_dict = {
             "message": "",
             "code": MyCode.ok,
-            "data": None
+            "data": {}
         }
         try:
             body_dict = json.loads(request.body.decode("utf8"))
@@ -91,13 +53,15 @@ class AuthView(View):
                 if bcrypt.checkpw(str.encode(password, "utf8"), str.encode(db_user.password_bcrypt, "utf8")):
                     result_dict["code"] = MyCode.ok
                     result_dict["message"] = "登录成功"
+                    token = db_user.token
                     # 生成token，添加到响应头中
+                    result_dict["data"]["token"] = token
                 else:
                     result_dict["code"] = MyCode.forbidden
                     result_dict["message"] = "请检查用户名或密码"
 
         except Exception as e:
-            print(e)
+            print("登录异常", e)
             result_dict["code"] = MyCode.forbidden
             result_dict["message"] = "请求异常"
         return result(code=result_dict["code"], message=result_dict["message"], data=result_dict["data"])
@@ -106,33 +70,26 @@ class AuthView(View):
         body_dict = json.loads(request.body.decode("utf8"))
         user_no = body_dict["userNo"]
         password = body_dict["password"]
-        result_dict = {
-            "message": "",
-            "code": MyCode.ok,
-            "data": None
-        }
         try:
             if user_no is None or password is None:
                 return result(message="账号密码不能为空", code=MyCode.paramserror)
+            elif len(user_no) < 11:
+                return result(message="账号不能小于11位", code=MyCode.paramserror)
+            elif len(password) < 10:
+                return result(message="密码不能小于10位", code=MyCode.paramserror)
             else:
-                pass
+                # 查询数据库账号是否存在
+                exist = userExist(user_no)
+                if exist:
+                    return result("账号已经存在", code=MyCode.paramserror)
+                return result("ok", data={"user_no": user_no, "password": password})
         except:
-            pass
+            return result(code=MyCode.servererror, message="请求异常")
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+def userExist(user_no: str):
+    user = MyUser.objects.filter(no=user_no).first()
+    if user is None:
+        return False
+    else:
+        return True

@@ -4,9 +4,10 @@ from django import forms
 
 class User(models.Model):
     ROLE = (
-        (1, 'teacher'),
-        (2, 'student'),
-        (3, 'tourist')
+        (1, 'super_user'),
+        (2, 'teacher'),
+        (3, 'student'),
+        (4, 'tourist')
     )
     # 自定义主键，使用了primary_key后python不会再自动的添加
     id = models.BigAutoField(primary_key=True)
