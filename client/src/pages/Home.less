@@ -1,20 +1,38 @@
 @import "@/style/var.less";
 
+// 修改默认样式
+.layout-comp {
+   .ant-layout-content {
+      margin: 0 !important;
+
+      .site-layout-background {
+         padding: 1rem !important;
+      }
+   }
+}
+
 .home-box {
    .full;
    .bbox;
-   
-   .home-header{
+
+   .home-header {
       background-color: #fff;
    }
 
 
-   .sider-item{
-      height: 100%;
+   
+
+   .sider-item {
+      height          : 100%;
       background-color: @font-base-color;
 
-      .left-menu{
+      .left-menu {
          height: 100%;
       }
+
+   }
+
+   .footer-comp {
+      padding: 1rem;
    }
 }

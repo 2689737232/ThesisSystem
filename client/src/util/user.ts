@@ -6,6 +6,9 @@ type GetUserState = {
    }
 }
 
+/**
+ *  从localstorage中获取token
+ */
 export function getUserInfo(): GetUserState {
    const result: GetUserState = {
       state: false,
