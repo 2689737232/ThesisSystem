@@ -2,6 +2,7 @@ import React from 'react';
 import { Menu } from 'antd';
 import { SolutionOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import "./MenuComp.less"
+import MyArticle from '../ArticleComp/MyMyArticle';
 
 type MenuComp = {
    className: string

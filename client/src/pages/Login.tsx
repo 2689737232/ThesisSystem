@@ -35,13 +35,18 @@ function Login() {
          message.error("请输入完整！")
          return false;
       }
-      const response = await apiLogin(userNo, password)
+      const response = await apiLogin(userNo, password, (error: any) => {
+         if ((error.message as string).startsWith("timeout")) message.error("请求超时请稍后重试")
+      })
+      if (!response) return
       const data: ApiResponse = response.data;
-      if (data.code === 200) {
+      if (data.code === 200 && data.data) {
          message.success("登录成功！")
-         if (data.data) {
+         if (data.data.token) {
             localStorage.setItem("user", data.data.token)
             navigate("/home")
+         } else {
+            message.error("登录成功，但是token获取失败！")
          }
       } else {
          message.error(data.message)

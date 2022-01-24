@@ -1,11 +1,14 @@
 import { Tabs } from 'antd';
 import React, { useState } from 'react';
+import MyArticle from './ArticleComp/MyMyArticle';
 const { TabPane } = Tabs;
 
 const initialPanes = [
-   { title: 'Tab 1', content: 'Content of Tab 1', key: '1' },
-   { title: 'Tab 2', content: <input type="text" />, key: '2' },
-   { title: 'Tab 3', content: 'Content of Tab 3', key: '3', closable: false }
+   { title: '我的文献', content: <MyArticle></MyArticle>, key: '1' },
+   { title: '浏览', content: <input type="text" />, key: '2' },
+   { title: '回收站', content: '回收站', key: '3' },
+   { title: '添加用户', content: '添加用户', key: '4' },
+   { title: '导入', content: '导入', key: '5' }
 ];
 
 function ContentContainer() {

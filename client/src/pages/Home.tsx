@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import useLogin from '../hooks/useLogin'
 import { Layout, Menu, message } from 'antd';
-import { SolutionOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import "./Home.less"
-import TopBar from '../components/TopBar';
+import TopBar from '../components/TopBar/TopBar';
 import { getUserInfo } from '../util/user';
-import MenuComp from '../components/MenuComp';
+import MenuComp from '../components/MenuComp/MenuComp';
 import ContentContainer from '../components/ContentContainer';
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content,  Sider } = Layout;
 
 
 function Home() {
