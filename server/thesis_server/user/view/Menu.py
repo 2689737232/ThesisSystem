@@ -1,4 +1,4 @@
-import code
+# -*- coding: utf-8 -*-
 import json
 from rest_framework.views import APIView
 from django.views.decorators.csrf import csrf_exempt
