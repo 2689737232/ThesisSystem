@@ -1,8 +1,9 @@
+import code
 from msilib.schema import Error
 import bcrypt
 from django.views import View
 import json
-from django.http import HttpResponse
+from .models import User, Menu, Function
 from util.result import result, MyCode
 from django.views.decorators.http import require_http_methods, require_POST
 from django.utils.decorators import method_decorator
@@ -100,8 +101,10 @@ class AuthView(View):
                                    age=age
                                    )
                     # 设置用户权限
+                    addUserPermission(user)
                     return result("ok", data={"user_no": user.no, "name": user.name})
         except BaseException as be:
+            print("注册服务错误", be)
             return result(code=MyCode.servererror, message="请求异常")
 
 
@@ -124,6 +127,17 @@ def addUser(user_no, password, role, name,  age):
     user.save()
     return user
 
+
+# 添加根据用户role添加权限
+def addUserPermission(user: User):
+    # 默认注册下都有我的文献、浏览、回收站页面
+    common_name = ["我的文献", "浏览", "回收站"]
+    execution_queue = gen_execution_queue(common_name, user)
+    return execution_queue
+
+def gen_execution_queue(name_list: list, user: User):
+    pass
+    # result_list = [Menu(code=name, name=name, state="allow") for name in name_list]
 # 判断用户是否存在
 
 

@@ -73,71 +73,82 @@ class MapModel(models.Model):
     @property
     def code_name(self):
         return self.code_dict[self.code]
+
     class Meta:
         abstract = True
 
+
 class Menu(MapModel):
-    user_menu = models.ManyToManyField(User)  # 菜单和用户多对一
+    user_menu = models.ManyToManyField(User, through='UserMenus')  # 菜单和用户多对一
     name = models.CharField(max_length=50, null=True)
     CODE = (
-        ("1000001", "我的文献"),
-        ("1000002", "浏览"),
-        ("1000003", "回收站"),
-        ("1000004", "添加用户"),
-        ("1000005", "导入"),
-        ("1000006", "权限修改")
+        ("我的文献", "1000001"),
+        ("浏览", "1000002"),
+        ("回收站", "1000003"),
+        ("添加用户", "1000004"),
+        ("导入", "1000005"),
+        ("权限修改", "1000006")
     )
     code_dict = {
-        "1000001": "我的文献",
-        "1000002": "浏览",
-        "1000003": "回收站",
-        "1000004": "添加用户",
-        "1000005": "导入",
-        "1000006": "权限修改"
+        "我的文献": "1000001",
+        "浏览": "1000002",
+        "回收站": "1000003",
+        "添加用户": "1000004",
+        "导入": "1000005",
+        "权限修改": "1000006"
     }
     code = models.CharField(choices=CODE, max_length=7, null=False)
+    icon = models.CharField(max_length=200, null=True)
+
+
+class UserMenus(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     STATE = (
-        (1, 'allow'),
-        (2, 'forbid')
+        ('allow', 1),
+        ('forbid', 2)
     )
     state = models.SmallIntegerField(choices=STATE, null=False)
-    icon = models.CharField(max_length=200, null=True)
 
 
 
 class Function(models.Model):
-    user_function = models.ManyToManyField(User)  # 功能和用户是多对多
+    user_function = models.ManyToManyField(User, through='UserFunctions')  # 功能和用户是多对多
     menu_id = models.ForeignKey(Menu,  on_delete=models.CASCADE)  # 功能和菜单多对一
     name = models.CharField(max_length=50, null=False)
     CODE = (
         # 我的文献页
-        ("2000001", "浏览我的文档"),
+        ("浏览我的文档", "2000001"),
         # 回收站页
-        ("2000002", "删除我的文档"),
+        ("删除我的文档", "2000002"),
         # 浏览页
-        ("2000003", "修改自己文档"),
+        ("修改自己文档", "2000003"),
         # 添加用户页
-        ("2000004", "添加学生"),
-        ("2000005", "添加教师"),
+        ("添加学生", "2000004"),
+        ("添加教师", "2000005"),
         # 导入页
-        ("2000006", "导入文档"),
+        ("导入文档", "2000006"),
         # 权限修改页
-        ("2000007", "权限修改")
+        ("权限修改", "2000007")
     )
     code_dict = {
-        "2000001": "浏览我的文档",
-        "2000002": "删除我的文档",
-        "2000003": "修改自己文档",
-        "2000004": "添加学生",
-        "2000005": "添加教师",
-        "2000006": "导入文档",
-        "2000007": "权限修改"
+        "浏览我的文档": "2000001",
+        "删除我的文档": "2000002",
+        "修改自己文档": "2000003",
+        "添加学生": "2000004",
+        "添加教师": "2000005",
+        "导入文档": "2000006",
+        "权限修改": "2000007"
     }
     code = models.CharField(choices=CODE, max_length=7, null=False)
-    STATE = (
-        (1, 'allow'),
-        (2, 'forbid')
-    )
-    state = models.SmallIntegerField(choices=STATE, null=False)
     icon = models.CharField(max_length=200, null=True)
 
+
+class UserFunctions(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    function = models.ForeignKey(Function, on_delete=models.CASCADE)
+    STATE = (
+        ('allow', 1),
+        ('forbid', 2)
+    )
+    state = models.SmallIntegerField(choices=STATE, null=False)
