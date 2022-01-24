@@ -5,7 +5,8 @@ import sys
 
 # 相对于manage.py文件的相对路径
 module_path = [
-    "util"
+    "util",
+    "user"
 ]
 
 

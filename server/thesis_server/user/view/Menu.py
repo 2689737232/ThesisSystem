@@ -1,10 +1,11 @@
+import code
 import json
 from rest_framework.views import APIView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from user.models import Menu, Function
+from user.models import Menu as MenuModel, Function
 from user.decorators.permission_required import permission_required
-
+from util.result import result, MyCode
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Menu(APIView):
@@ -13,13 +14,20 @@ class Menu(APIView):
         body_dict = json.loads(request.body.decode("utf8"))
         action = body_dict["action"]
         if action == "init":
-            gen_init_menu()
+            if gen_init_menu():
+                return result(message=action)
+            else: 
+                return  result(message="添加失败", code=500)
 
+    def get(self, request, *args, **kwords):
+        menus = MenuModel.objects
+        return result("")
 
 def gen_init_menu():
     menu_list = ["我的文献", "浏览", "回收站", "添加用户", "导入", "权限修改"]
-    gen_list = [Menu(name=menu, code=menu) for menu in menu_list]
-    [menu.save() for menu in gen_list]
+    gen_list = [MenuModel(name=menu, code=menu) for menu in menu_list]
+    for menu in gen_list:
+        menu.save()
     return True
 
 
