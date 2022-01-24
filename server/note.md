@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 ### 模型
 
 如果自己在模型中添加了主键`id = models.BigAutoField(primary_key=True)`django不会再自动的添加主键。  
+模型出错`migrate`错误，实在不行删除目录`migrations`下的除`__init__.py`的文件。再重新`makemigrations`、`migrate`
 
 ### 配置静态文件地址
 

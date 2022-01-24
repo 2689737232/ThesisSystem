@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import bcrypt
 from django.views import View
 import json
@@ -9,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect  # 使用装�
 from .models import User as MyUser
 from rest_framework.views import APIView
 from util.tools import request_dict
+from .decorators.permission_required import permission_required
 # Create your views here.
 
 
@@ -66,11 +68,18 @@ class AuthView(View):
             result_dict["message"] = "请求异常"
         return result(code=result_dict["code"], message=result_dict["message"], data=result_dict["data"])
 
+    # 用户注册只对管理员开放
+    @permission_required("account.select_user")
     def get(self, request, *args, **kwords):
         body_dict = json.loads(request.body.decode("utf8"))
         user_no = body_dict["userNo"]
         password = body_dict["password"]
+        role = body_dict["role"]
+        name = body_dict["name"]
+        age = body_dict["age"]
         try:
+            if role is None:
+                role = 3
             if user_no is None or password is None:
                 return result(message="账号密码不能为空", code=MyCode.paramserror)
             elif len(user_no) < 11:
@@ -81,10 +90,41 @@ class AuthView(View):
                 # 查询数据库账号是否存在
                 exist = userExist(user_no)
                 if exist:
-                    return result("账号已经存在", code=MyCode.paramserror)
-                return result("ok", data={"user_no": user_no, "password": password})
-        except:
+                    return result(message="账号已经存在", code=MyCode.paramserror)
+                else:
+                    # 添加用户
+                    user = addUser(user_no=user_no,
+                                   password=password,
+                                   role=role,
+                                   name=name,
+                                   age=age
+                                   )
+                    # 设置用户权限
+                    return result("ok", data={"user_no": user.no, "name": user.name})
+        except BaseException as be:
             return result(code=MyCode.servererror, message="请求异常")
+
+
+# 向数据库中添加用户
+def addUser(user_no, password, role, name,  age):
+    if age is None:
+        age = 0
+    if name is None:
+        name = "未知"
+
+    password_encode = str.encode(password, "utf8")
+    user = MyUser(
+        no=user_no,
+        role=role,
+        name=name,
+        password_bcrypt=bcrypt.hashpw(
+            password_encode, bcrypt.gensalt()
+        ).decode("utf8")
+    )
+    user.save()
+    return user
+
+# 判断用户是否存在
 
 
 def userExist(user_no: str):

@@ -35,9 +35,7 @@ function Login() {
          message.error("请输入完整！")
          return false;
       }
-      const response = await apiLogin(userNo, password, (error: any) => {
-         if ((error.message as string).startsWith("timeout")) message.error("请求超时请稍后重试")
-      })
+      const response = await apiLogin(userNo, password)
       if (!response) return
       const data: ApiResponse = response.data;
       if (data.code === 200 && data.data) {
