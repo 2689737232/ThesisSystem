@@ -1,5 +1,3 @@
-import code
-from msilib.schema import Error
 import bcrypt
 from django.views import View
 import json
@@ -8,10 +6,13 @@ from util.result import result, MyCode
 from django.views.decorators.http import require_http_methods, require_POST
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect  # 使用装饰器
-from .models import User as MyUser
+from .models import User as MyUser, UserFunctions, UserMenus, \
+    function_code_dict, menu_code_dict, menu_function_dict
 from rest_framework.views import APIView
 from util.tools import request_dict
 from .decorators.permission_required import permission_required
+from django.db import transaction
+
 # Create your views here.
 
 
@@ -71,6 +72,7 @@ class AuthView(View):
 
     # 用户注册只对管理员开放
     # @permission_required("account.select_user")
+    @transaction.atomic
     def get(self, request, *args, **kwords):
         body_dict = json.loads(request.body.decode("utf8"))
         user_no = body_dict["userNo"]
@@ -93,23 +95,26 @@ class AuthView(View):
                 if exist:
                     return result(message="账号已经存在", code=MyCode.paramserror)
                 else:
+                    save_id = transaction.savepoint()
                     # 添加用户
                     user = addUser(user_no=user_no,
                                    password=password,
                                    role=role,
                                    name=name,
-                                   age=age
+                                   age=age,
+                                   save_id=save_id
                                    )
-                    # 设置用户权限
-                    addUserPermission(user)
+
                     return result("ok", data={"user_no": user.no, "name": user.name})
         except BaseException as be:
             print("注册服务错误", be)
+            if save_id is not None:
+                transaction.savepoint_rollback(save_id)
             return result(code=MyCode.servererror, message="请求异常")
 
 
 # 向数据库中添加用户
-def addUser(user_no, password, role, name,  age):
+def addUser(user_no, password, role, name,  age, save_id):
     if age is None:
         age = 0
     if name is None:
@@ -125,22 +130,54 @@ def addUser(user_no, password, role, name,  age):
         ).decode("utf8")
     )
     user.save()
+    # 设置用户页面、功能权限
+    add_user_permission(user)
+    # 提交事务
+    transaction.savepoint_commit(save_id)
     return user
 
 
-# 添加根据用户role添加权限
-def addUserPermission(user: User):
-    # 默认注册下都有我的文献、浏览、回收站页面
-    common_name = ["我的文献", "浏览", "回收站"]
-    execution_queue = gen_execution_queue(common_name, user)
-    return execution_queue
+#
+def add_user_permission(user: User):
+    user_menus = []
+    user_function = []
+    if user.role == '1':    # 管理员
+        user_menus = menu_code_dict.keys()
+        user_function = function_code_dict.keys()
+    elif user.role == '2':  # 教师
+        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户"]
+        user_function = ["浏览我的文档", "删除我的文档",
+                         "修改自己文档", "浏览其他文献", "添加学生", "导入文档"]
+    elif user.role == '3':  # 学生
+        user_menus = ["我的文献", "浏览", "回收站", "导入"]
+        user_function = ["浏览我的文档", "删除我的文档", "修改自己文档", "浏览其他文献",  "导入文档"]
+    else:
+        user_menus = ["浏览"]
+        user_function = ["浏览其他文献"]
+    set_user_menu_function(user_menus, user_function, user)
 
-def gen_execution_queue(name_list: list, user: User):
-    pass
-    # result_list = [Menu(code=name, name=name, state="allow") for name in name_list]
+
+def set_user_menu_function(user_menus, user_functions, user):
+    all_menu = list(menu_code_dict.keys())
+    all_function = list(function_code_dict.keys())
+
+    for mk in all_menu:
+        menu = Menu.objects.filter(code=menu_code_dict[mk]).first()
+        if mk in user_menus:
+            UserMenus(user=user, menu=menu, state=1).save()
+        else:
+            UserMenus(user=user, menu=menu, state=2).save()
+
+    for fk in all_function:
+        function = Function.objects.filter(
+            code=function_code_dict[fk]).first()
+        if fk in user_functions:
+            UserFunctions(user=user, function=function, state=1).save()
+        else:
+            UserFunctions(user=user, function=function, state=2).save()
+
+
 # 判断用户是否存在
-
-
 def userExist(user_no: str):
     user = MyUser.objects.filter(no=user_no).first()
     if user is None:

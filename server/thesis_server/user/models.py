@@ -102,14 +102,25 @@ function_code_dict = {
     "添加教师": "2000005",
     "导入文档": "2000006",
     "权限修改": "2000007",
-    "恢复文档": "2000008"
+    "恢复文档": "2000008",
+    "浏览其他文献": "2000009"
 }
+menu_function_dict = {
+    "我的文献": ["浏览我的文档", "删除我的文档", "修改自己文档"],
+    "浏览": ["浏览其他文献"],
+    "回收站": ["恢复文档"],
+    "添加用户": ["添加学生", "添加教师"],
+    "导入": ["导入文档"],
+    "权限修改": ["权限修改"]
+}
+
 
 class Menu(MapModel):
     user_menu = models.ManyToManyField(User, through='UserMenus')  # 菜单和用户多对一
     name = models.CharField(max_length=50, null=True)
     CODE = gen_code(menu_code_dict)
-    code = models.CharField(choices=CODE, max_length=7, null=False, unique=True)
+    code = models.CharField(choices=CODE, max_length=7,
+                            null=False, unique=True)
     icon = models.CharField(max_length=200, null=True)
 
 
@@ -117,21 +128,20 @@ class UserMenus(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     STATE = (
-        ('allow', 1),
-        ('forbid', 2)
+        (1, 'allow'),
+        (2, 'forbid')
     )
     state = models.SmallIntegerField(choices=STATE, null=False)
 
 
-
-
-
 class Function(models.Model):
-    user_function = models.ManyToManyField(User, through='UserFunctions')  # 功能和用户是多对多
-    menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE)  # 功能和菜单多对一
+    user_function = models.ManyToManyField(
+        User, through='UserFunctions')  # 功能和用户是多对多
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)  # 功能和菜单多对一
     name = models.CharField(max_length=50, null=False)
     CODE = gen_code(function_code_dict)
-    code = models.CharField(choices=CODE, max_length=7, null=False, unique=True)
+    code = models.CharField(choices=CODE, max_length=7,
+                            null=False, unique=True)
     icon = models.CharField(max_length=200, null=True)
 
 
@@ -139,7 +149,7 @@ class UserFunctions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     function = models.ForeignKey(Function, on_delete=models.CASCADE)
     STATE = (
-        ('allow', 1),
-        ('forbid', 2)
+        (1, 'allow'),
+        (2, 'forbid')
     )
     state = models.SmallIntegerField(choices=STATE, null=False)

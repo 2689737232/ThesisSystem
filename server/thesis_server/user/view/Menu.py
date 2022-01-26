@@ -33,7 +33,7 @@ class Menu(APIView):
         return result(message="ok", data={"menus": menu_list})
 
 def gen_init_menu():
-    menu_list = ["我的文献", "浏览", "回收站", "添加用户", "导入", "权限修改"]
+    menu_list = menu_code_dict.keys()
     gen_list = [MenuModel(name=menu, code=menu_code_dict[menu]) for menu in menu_list]
     for menu in gen_list:
         menu.save()
