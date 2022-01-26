@@ -9,7 +9,8 @@ const PROD_BASE_URL = "localhost:8000/api/v1";
 export const request = axios.create({
    baseURL: config.environment === "dev" ? DEV_BASE_URL : PROD_BASE_URL,
    headers: {
-      "X-CSRFToken": "csrftoken"
+      "X-CSRFToken": "csrftoken",
+      "Authorization": localStorage.getItem("user") || ""
    },
    timeout: 3000
 })
