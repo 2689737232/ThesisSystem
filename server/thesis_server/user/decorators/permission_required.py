@@ -9,7 +9,8 @@ from user.setting import SECRET_KEY
 from util.result import result, MyCode
 
 
-def permission_required(msg):
+# level表示权限级别，管理员验证级别、教师验证级别、学生验证级别
+def permission_required(level):
     def decorator(func):
         def _wrapped_view(self, request, *args, **kwargs):
             print(self, request)
@@ -22,7 +23,7 @@ def permission_required(msg):
                         token, SECRET_KEY, algorithms=['HS256']
                     )
                     role = dict.get('data').get('role')
-                    if role != 1:
+                    if role > level:
                         return result(code=401, message="禁止访问")
                     else:
                         return func(self, request, *args, **kwargs)

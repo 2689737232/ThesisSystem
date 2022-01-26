@@ -4,10 +4,12 @@ from user.models import menu_code_dict, \
     Function as FunctionModel, Menu
 from util.result import result
 import json
+from user.decorators.permission_required import permission_required
 
 
 # 更具menu生成function
 class Function(APIView):
+    @permission_required(1)
     def post(self, request, *args, **kwords):
         body_dict = json.loads(request.body.decode("utf8"))
         action = body_dict["action"]

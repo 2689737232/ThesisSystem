@@ -14,7 +14,7 @@ from user.setting import SECRET_KEY
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Menu(APIView):
-    @permission_required("需要携带token")
+    @permission_required(1)
     def post(self, request, *args, **kwords):
         body_dict = json.loads(request.body.decode("utf8"))
         action = body_dict["action"]

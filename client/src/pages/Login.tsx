@@ -28,7 +28,7 @@ function Login() {
             login()
          }
       }
-   }, [])
+   }, [login])
 
    async function login() {
       if (userNo.length === 0 || password.length === 0) {

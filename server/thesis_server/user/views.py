@@ -71,7 +71,7 @@ class AuthView(View):
         return result(code=result_dict["code"], message=result_dict["message"], data=result_dict["data"])
 
     # 用户注册只对管理员开放
-    @permission_required("account.select_user")
+    @permission_required(1)
     @transaction.atomic
     def get(self, request, *args, **kwords):
         body_dict = json.loads(request.body.decode("utf8"))
