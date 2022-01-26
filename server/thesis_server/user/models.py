@@ -8,6 +8,7 @@ from .setting import SECRET_KEY
 from django.db import models
 import jwt
 
+
 # Create your models here.
 
 
@@ -78,26 +79,37 @@ class MapModel(models.Model):
         abstract = True
 
 
+def gen_code(code_dict: list):
+    l = []
+    for key, val in code_dict.items():
+        l.append((val, key))
+    return tuple(l)
+
+
+menu_code_dict = {
+    "我的文献": "1000001",
+    "浏览": "1000002",
+    "回收站": "1000003",
+    "添加用户": "1000004",
+    "导入": "1000005",
+    "权限修改": "1000006"
+}
+function_code_dict = {
+    "浏览我的文档": "2000001",
+    "删除我的文档": "2000002",
+    "修改自己文档": "2000003",
+    "添加学生": "2000004",
+    "添加教师": "2000005",
+    "导入文档": "2000006",
+    "权限修改": "2000007",
+    "恢复文档": "2000008"
+}
+
 class Menu(MapModel):
     user_menu = models.ManyToManyField(User, through='UserMenus')  # 菜单和用户多对一
     name = models.CharField(max_length=50, null=True)
-    CODE = (
-        ("我的文献", "1000001"),
-        ("浏览", "1000002"),
-        ("回收站", "1000003"),
-        ("添加用户", "1000004"),
-        ("导入", "1000005"),
-        ("权限修改", "1000006")
-    )
-    code_dict = {
-        "我的文献": "1000001",
-        "浏览": "1000002",
-        "回收站": "1000003",
-        "添加用户": "1000004",
-        "导入": "1000005",
-        "权限修改": "1000006"
-    }
-    code = models.CharField(choices=CODE, max_length=7, null=False)
+    CODE = gen_code(menu_code_dict)
+    code = models.CharField(choices=CODE, max_length=7, null=False, unique=True)
     icon = models.CharField(max_length=200, null=True)
 
 
@@ -112,35 +124,14 @@ class UserMenus(models.Model):
 
 
 
+
+
 class Function(models.Model):
     user_function = models.ManyToManyField(User, through='UserFunctions')  # 功能和用户是多对多
-    menu_id = models.ForeignKey(Menu,  on_delete=models.CASCADE)  # 功能和菜单多对一
+    menu_id = models.ForeignKey(Menu, on_delete=models.CASCADE)  # 功能和菜单多对一
     name = models.CharField(max_length=50, null=False)
-    CODE = (
-        # 我的文献页
-        ("浏览我的文档", "2000001"),
-        # 回收站页
-        ("删除我的文档", "2000002"),
-        # 浏览页
-        ("修改自己文档", "2000003"),
-        # 添加用户页
-        ("添加学生", "2000004"),
-        ("添加教师", "2000005"),
-        # 导入页
-        ("导入文档", "2000006"),
-        # 权限修改页
-        ("权限修改", "2000007")
-    )
-    code_dict = {
-        "浏览我的文档": "2000001",
-        "删除我的文档": "2000002",
-        "修改自己文档": "2000003",
-        "添加学生": "2000004",
-        "添加教师": "2000005",
-        "导入文档": "2000006",
-        "权限修改": "2000007"
-    }
-    code = models.CharField(choices=CODE, max_length=7, null=False)
+    CODE = gen_code(function_code_dict)
+    code = models.CharField(choices=CODE, max_length=7, null=False, unique=True)
     icon = models.CharField(max_length=200, null=True)
 
 

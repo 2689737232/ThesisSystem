@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from user.models import Menu as MenuModel, Function
 from user.decorators.permission_required import permission_required
 from util.result import result, MyCode
+from user.models import function_code_dict, menu_code_dict
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Menu(APIView):
@@ -14,36 +15,26 @@ class Menu(APIView):
         body_dict = json.loads(request.body.decode("utf8"))
         action = body_dict["action"]
         if action == "init":
-            if gen_init_menu():
-                return result(message=action)
-            else: 
-                return  result(message="添加失败", code=500)
+            try:
+                if gen_init_menu():
+                    return result(message="操作%s执行成功"%action)
+                else:
+                    return result(message="添加失败", code=500)
+            except BaseException as e:
+                return result(message=str(e))
 
     def get(self, request, *args, **kwords):
-        menus = MenuModel.objects
-        return result("")
+        menus = MenuModel.objects.all()
+        menu_list = [{
+            "name": menu.name,
+            "code": menu.code,
+            "id": menu.id
+        } for menu in menus]
+        return result(message="ok", data={"menus": menu_list})
 
 def gen_init_menu():
     menu_list = ["我的文献", "浏览", "回收站", "添加用户", "导入", "权限修改"]
-    gen_list = [MenuModel(name=menu, code=menu) for menu in menu_list]
+    gen_list = [MenuModel(name=menu, code=menu_code_dict[menu]) for menu in menu_list]
     for menu in gen_list:
         menu.save()
     return True
-
-
-def gen_init_function():
-    function_list = ["浏览我的文档", "删除我的文档",
-                     "修改自己文档", "添加学生", "添加教师", "添加管理员", "导入文档", "权限修改"]
-    menu_function_dict = {
-        "浏览我的文档": "我的文献",
-        "删除我的文档": "我的文献",
-        "修改自己文档": "我的文献",
-        "添加学生": "添加用户",
-        "添加教师": "添加用户",
-        "添加管理员": "添加用户",
-        "导入文档": "导入",
-        "权限修改": "权限修改"
-    }
-    result_list = []
-    for name in function_list:
-        Function.objects.filter("")

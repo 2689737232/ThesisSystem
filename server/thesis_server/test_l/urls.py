@@ -12,5 +12,6 @@ urlpatterns = [
     path("public-keys", views.PublicKeyView.as_view(), name="publi_keys"),
     path("password", views.BcryptView.as_view(), name="password"),
     path("auth", views.AuthView.as_view(), name="auth"),
-    re_path(r'^info/(?P<msg>\S{1,})/$', view=views.show_params_view)
+    path("user", views.add_user, name="user"),
+    re_path(r'^info/(?P<msg>\S+)/$', view=views.show_params_view)
 ]

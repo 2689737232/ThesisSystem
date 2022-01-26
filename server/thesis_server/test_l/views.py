@@ -15,15 +15,16 @@ from django.views.decorators.http import require_http_methods, require_POST
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt  # 使用装饰器
 from .models import User as MyUser
+from util.result import result
+
 # 视图可以写成函数（FBV）、类（CBV）
 
 
 def index_view(request):
     return HttpResponse("传入的参数为 %s." % id)
 
+
 # 需要大写
-
-
 @require_http_methods(["GET", "POST"])
 def show_params_view(requset, msg):
     return result(message=msg)
@@ -136,3 +137,12 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+@require_POST
+@method_decorator(decorator=[csrf_exempt], name="dispatch")
+def add_user(requset):
+    lala = MyUser.objects.create(no="91823010222", role='1', name="lala", age=22,
+                          password_bcrypt="456asgasgx5g4as1gxga6sg2cx13ds1g56sdh4sdh")
+    lala.save()
+    return  result(message="添加成功")

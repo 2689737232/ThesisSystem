@@ -9,7 +9,6 @@ module_path = [
     "user"
 ]
 
-
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'thesis_server.settings')
@@ -22,7 +21,6 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
-
 
 if __name__ == '__main__':
     for path in module_path:
