@@ -27,6 +27,9 @@ function Login() {
          if (e.key === "Enter") {
             login()
          }
+      } 
+      return function(){
+         window.onkeydown = null
       }
    }, [login])
 

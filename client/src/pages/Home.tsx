@@ -52,10 +52,6 @@ function Home() {
                onBreakpoint={broken => {
                   setLeftCollapsed(broken)
                }}
-            // onCollapse={(collapsed, type) => {
-            //    console.log(collapsed);
-            //    setLeftCollapsed(!leftCollapsed)
-            // }}
             >
                <div className="logo" />
                <MenuComp className='left-menu'></MenuComp>

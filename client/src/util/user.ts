@@ -37,5 +37,6 @@ export async function getUserInfo(): Promise<GetUserState> {
 
 export function logOut() {
    localStorage.removeItem("user")
+   location.reload()
    return true
 }

@@ -62,7 +62,7 @@ function ContentContainer() {
       })
       if (result.length === 0) {
          return (<TabPane tab={"选择一个菜单"} key={"unselected"} closable={false}>
-            还没有选择一个菜单哦
+            <div style={{fontSize:"16px", width:"10rem", height:"10rem", textAlign:'center'}}>还没有选择一个菜单哦</div>
          </TabPane>)
       } else {
          return result

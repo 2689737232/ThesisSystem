@@ -18,8 +18,10 @@ function TopBar(props: TopBarProps) {
 
    function confirm() {
       if (logOut()) {
+         
+
          message.success('退出成功');
-         navigate("/login")
+         navigate("/login");
       }
    }
 
