@@ -1,59 +1,73 @@
-import { Tabs } from 'antd';
-import React, { useState } from 'react';
+import { message, Tabs } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { setActiveMenu, setMenuQueue } from '../features/menuSlice';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import MyArticle from './ArticleComp/MyMyArticle';
+import { MenuType } from './MenuComp/MenuComp';
+import menuNameMap from './MenuNameMap';
 const { TabPane } = Tabs;
 
-const initialPanes = [
-   { title: '我的文献', content: <MyArticle></MyArticle>, key: '1' },
-   { title: '浏览', content: <input type="text" />, key: '2' },
-   { title: '回收站', content: '回收站', key: '3' },
-   { title: '添加用户', content: '添加用户', key: '4' },
-   { title: '导入', content: '导入', key: '5' }
-];
+
 
 function ContentContainer() {
-   let newTabIndex = 0;
-   const [activeKey, setActiveKey] = useState(initialPanes[0].key)
-   const [panes, setPanes] = useState(initialPanes)
+   const menuList = useAppSelector(state => state.menu.value)
+   const activateMenu = useAppSelector(state => state.menu.active)
+   const dispatch = useAppDispatch()
+   const [activeKey, setActiveKey] = useState(activateMenu?.code)
 
-   function add() {
-      const activeKey = `newTab${newTabIndex++}`;
-      const newPanes = [...panes];
-      newPanes.push({ title: 'New Tab', content: 'Content of new Tab', key: activeKey });
-      setPanes(newPanes)
-      setActiveKey(activeKey)
-   };
+
+   useEffect(() => {
+      setActiveKey(activateMenu?.code)
+   }, [activateMenu])
+
    function remove(targetKey: string) {
-      let newActiveKey = activeKey;
+      let newActiveKey: string | undefined = activeKey;
       let lastIndex = 0;
-      panes.forEach((pane, i) => {
-         if (pane.key === targetKey) {
+      menuList.forEach((item, i) => {
+         if (item.code === targetKey) {
             lastIndex = i - 1;
          }
       });
-      const newPanes = panes.filter(pane => pane.key !== targetKey);
-      if (newPanes.length && newActiveKey === targetKey) {
+      const newPaneList: MenuType[] = menuList.filter(item => item.code !== targetKey);
+      if (newPaneList.length && newActiveKey === targetKey) {
          if (lastIndex >= 0) {
-            newActiveKey = newPanes[lastIndex].key;
+            newActiveKey = newPaneList[lastIndex].code;
+            dispatch(setActiveMenu(newPaneList[lastIndex]))
          } else {
-            newActiveKey = newPanes[0].key;
+            dispatch(setActiveMenu(newPaneList[0]))
+            newActiveKey = newPaneList[0].code;
          }
       }
-      setPanes(newPanes)
+      dispatch(setMenuQueue(newPaneList))
       setActiveKey(newActiveKey)
    };
-   const actions: { [key: string]: any } = { add, remove }
-
+   const actions: { [key: string]: any } = { remove }
 
    function onChange(activeKey: string) {
-      setActiveKey(activeKey)
+      if (activeKey !== "unselected") {
+         setActiveKey(activeKey)
+         dispatch(setActiveMenu(menuList.find(menu => menu.code === activeKey)))
+      }
    }
-
    function onEdit(targetKey: any, action: string) {
-      console.log(targetKey, action);
       actions[action](targetKey);
    }
 
+   function genPanes() {
+      const result = menuList.map(menu => {
+         const SubComp = menuNameMap[menu.name].SubComp
+         return <TabPane tab={menu.name} key={menu.code} closable>
+            {<SubComp />}
+         </TabPane>
+      })
+      if (result.length === 0) {
+         return (<TabPane tab={"选择一个菜单"} key={"unselected"} closable={false}>
+            还没有选择一个菜单哦
+         </TabPane>)
+      } else {
+         return result
+      }
+   }
 
 
    return (
@@ -65,11 +79,7 @@ function ContentContainer() {
             activeKey={activeKey}
             onEdit={onEdit}
          >
-            {panes.map(pane => (
-               <TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-                  {pane.content}
-               </TabPane>
-            ))}
+            {genPanes()}
          </Tabs>
       </div>
    );
