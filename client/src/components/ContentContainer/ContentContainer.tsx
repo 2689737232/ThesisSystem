@@ -1,10 +1,11 @@
 import { message, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { setActiveMenu, setMenuQueue } from '../features/menuSlice';
-import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import MyArticle from './ArticleComp/MyMyArticle';
-import { MenuType } from './MenuComp/MenuComp';
-import menuNameMap from './MenuNameMap';
+import { setActiveMenu, setMenuQueue } from '../../features/menuSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import MyArticle from '../ArticleComp/MyMyArticle';
+import { MenuType } from '../MenuComp/MenuComp';
+import menuNameMap from '../MenuNameMap';
+import "./ContentContainer.less";
 const { TabPane } = Tabs;
 
 
@@ -56,13 +57,13 @@ function ContentContainer() {
    function genPanes() {
       const result = menuList.map(menu => {
          const SubComp = menuNameMap[menu.name].SubComp
-         return <TabPane tab={menu.name} key={menu.code} closable>
+         return <TabPane className='tab-pane-con' tab={menu.name} key={menu.code} closable>
             {<SubComp />}
          </TabPane>
       })
       if (result.length === 0) {
-         return (<TabPane tab={"选择一个菜单"} key={"unselected"} closable={false}>
-            <div style={{fontSize:"16px", width:"10rem", height:"10rem", textAlign:'center'}}>还没有选择一个菜单哦</div>
+         return (<TabPane className='tab-pane-con' tab={"选择一个菜单"} key={"unselected"} closable={false}>
+            <div style={{ fontSize: "16px", width: "10rem", height: "10rem", textAlign: 'center' }}>还没有选择一个菜单哦</div>
          </TabPane>)
       } else {
          return result
@@ -71,8 +72,9 @@ function ContentContainer() {
 
 
    return (
-      <div className='content-container'>
+      <div id='content-id' className='content-container' style={{ height: "100%" }}>
          <Tabs
+            style={{ height: "100%" }}
             hideAdd
             type="editable-card"
             onChange={onChange}

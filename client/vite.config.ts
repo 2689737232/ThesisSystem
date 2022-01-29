@@ -1,11 +1,16 @@
+// @ts-ignore
 import dotenv from "dotenv"
 dotenv.config()
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 // 如果报错需要npm i @types/node -D
 const { resolve } = require("path");
 
 const environment = process.env.environment;
+
+
+console.log(resolve(__dirname, "./src"));
 
 // https://vitejs.dev/config/
 export default defineConfig({

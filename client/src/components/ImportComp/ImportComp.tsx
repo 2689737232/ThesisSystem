@@ -1,9 +1,109 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Upload, Button, Row, Col, message, Divider, Modal, Pagination } from 'antd';
+import { UploadOutlined, ClearOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { RcFile, UploadChangeParam } from 'antd/lib/upload';
+import { request } from '@/api/base';
+import { uploadPDF } from '@/api/upload';
+import "./ImportComp.less";
+import ListComp from './ListComp/ListComp';
+import Id from '@/util/Id';
+
+const { confirm } = Modal;
+export type PDFType = {
+    id: string,
+    file: RcFile
+}
 
 function ImportComp() {
-  return <div>
-    <input type="text" />
-  </div>;
+    const maxCount = 80;
+    const [pdfFiles, setPdfFiles] = useState<PDFType[]>([]);
+    const [uploading, setUploading] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalPageNum, setTotalPageNum] = useState(0)
+    const id = new Id()
+
+
+    async function handleUpload() {
+        const formData = new FormData();
+        pdfFiles.forEach(pdf => {
+            formData.append('pdfs[]', pdf)
+        })
+        setUploading(true)
+        // const result = await uploadPDF(formData)
+    }
+
+    useEffect(() => {
+        console.log(pdfFiles);
+        setTotalPageNum(pdfFiles.length)
+    }, [pdfFiles]);
+
+
+    const uploadProps = {
+        action: "localhost:8000",
+        accept: "application/pdf",
+        maxCount,
+        uploading: false,
+        showUploadList: false,
+        beforeUpload: (file: RcFile) => { // 返回false，实现手动上传
+            const isPDF = file.type === 'application/pdf';
+            if (isPDF) {
+                setPdfFiles(state => [...state, { file, id: id.genId(file.name) }])
+            } else message.error(`${file.name} 不是一个pdf格式文件`);
+            return false;
+        },
+        onChange: (info: UploadChangeParam<object>) => {
+            // console.log(info.fileList);
+        },
+        customRequest() {
+        }
+    }
+
+    function showConfirm() {
+        if (pdfFiles.length === 0) message.info("没有导入文件哦")
+        else {
+            confirm({
+                title: '是否清空?',
+                icon: <ExclamationCircleOutlined />,
+                content: '清除所有已导入的信息',
+                onOk() {
+                    setPdfFiles([])
+                },
+                onCancel() {
+                    console.log('Cancel');
+                },
+            });
+        }
+    }
+
+    function onPageChange(pageNumber: number) {
+        console.log('Page: ', pageNumber);
+    }
+
+    return <div className='import-container'>
+        <Row justify="end">
+            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                <Button onClick={showConfirm} icon={<ClearOutlined />}>清空</Button>
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+                <Upload multiple {...uploadProps}>
+                    <Button icon={<UploadOutlined />}>选择上传的文件</Button>
+                </Upload>
+            </Col>
+        </Row>
+        <Divider />
+        <Row className='middle-pdf-edit'>
+            <ListComp pdfFiles={pdfFiles}></ListComp>
+        </Row>
+        <Row>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                {
+                    pdfFiles.length === 0 ?
+                        <h2>选择pdf文献上传</h2> : ""
+                }
+            </Col>
+        </Row>
+    </div>;
 }
 
 export default ImportComp;

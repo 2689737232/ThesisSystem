@@ -5,7 +5,7 @@ import "./Home.less"
 import TopBar from '../components/TopBar/TopBar';
 import { getUserInfo, GetUserState } from '../util/user';
 import MenuComp from '../components/MenuComp/MenuComp';
-import ContentContainer from '../components/ContentContainer';
+import ContentContainer from '../components/ContentContainer/ContentContainer';
 import { tokenVerification } from '../api/login';
 import { useNavigate } from 'react-router';
 const { Header, Content, Sider } = Layout;
@@ -58,22 +58,11 @@ function Home() {
             </Sider>
             <Layout className='layout-comp'>
                <Content style={{ margin: '24px 16px 0' }}>
-                  <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+                  <div className="site-layout-background" style={{ padding: 24, height: "100%" }}>
                      <ContentContainer></ContentContainer>
                   </div>
                </Content>
             </Layout>
-            <Sider
-               trigger={null}
-               className='sider-item right-sider'
-               breakpoint="lg"
-               collapsedWidth="0"
-               collapsed={rightollapsed}
-               onBreakpoint={broken => {
-                  setRightollapsed(broken)
-               }}
-            >
-            </Sider>
          </Layout>
       </Layout>
    )
