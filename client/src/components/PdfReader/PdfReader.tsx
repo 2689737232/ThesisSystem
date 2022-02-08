@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
+
 
 type PdfReaderProps = {
   pdf: File
@@ -11,7 +12,7 @@ function PdfReader(props: PdfReaderProps) {
 
   useEffect(() => {
     async function inner() {
-      const loadingTask = pdfjsLib.getDocument(new Float64Array(await props.pdf.arrayBuffer()));
+      const loadingTask = pdfjsLib.getDocument(new Uint8Array(await props.pdf.arrayBuffer()));
       (async () => {
         const pdf = await loadingTask.promise;
         //
@@ -41,13 +42,14 @@ function PdfReader(props: PdfReaderProps) {
           //
           // Render PDF page into canvas context
           //
-          const renderContext = {
-            canvasContext: context,
-            transform,
-            viewport,
-          };
-          //@ts-ignore
-          page.render(renderContext);
+          if (context && transform && transform.length > 0) {
+            const renderContext = {
+              canvasContext: context,
+              transform,
+              viewport,
+            };
+            page.render(renderContext);
+          }
         }
       })();
     }
