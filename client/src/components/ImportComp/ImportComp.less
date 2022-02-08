@@ -1,21 +1,26 @@
+@import "@/style/var.less";
 
-.import-container{
-   max-height: 100%;
-   // overflow-x: auto;
-   overflow-y: auto;
-   position: relative;
+.import-container {
+   max-height   : 100%;
+   overflow-y   : auto;
+   position     : relative;
 
-   .bottom-pages{
-      position: absolute;
-      bottom: 1.5rem;
-      left: 50%;
+   .bottom-pages {
+      position : absolute;
+      bottom   : 1.5rem;
+      left     : 50%;
       transform: translateX(-50%);
    }
-   
-   .middle-pdf-edit{
+
+   .middle-pdf-edit {
       height: 100%;
-      width: 100%;
+      width : 100%;
    }
 
+   // .mask {
+   //    .full;
+   //    z-index: 999;
+   //    position: fixed;
+   //    background-color: rgb(165, 165, 165);
+   // }
 }
-

@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import "./PdfReader.less"
 import * as pdfjsLib from 'pdfjs-dist';
+import { useAppDispatch } from '@/hooks/reduxHooks';
+import { setTargetPDF } from '@/features/importPdfSlice';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
 
@@ -9,7 +12,7 @@ type PdfReaderProps = {
 
 function PdfReader(props: PdfReaderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
+  const dispatch = useAppDispatch()
   useEffect(() => {
     async function inner() {
       const loadingTask = pdfjsLib.getDocument(new Uint8Array(await props.pdf.arrayBuffer()));
@@ -18,6 +21,7 @@ function PdfReader(props: PdfReaderProps) {
         //
         // Fetch the first page
         //
+
         const page = await pdf.getPage(1);
         const scale = 1.5;
         const viewport = page.getViewport({ scale });
@@ -56,8 +60,11 @@ function PdfReader(props: PdfReaderProps) {
     inner()
   })
 
+  function handleClick() {
+    dispatch(setTargetPDF(null))
+  }
 
-  return <div>
+  return <div onClick={handleClick } className='pdf-reader-container'>
     <canvas ref={canvasRef}></canvas>
   </div>;
 }

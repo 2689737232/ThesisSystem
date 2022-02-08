@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import importPdfSlice from './features/importPdfSlice'
 import menuReducer from "./features/menuSlice"
 

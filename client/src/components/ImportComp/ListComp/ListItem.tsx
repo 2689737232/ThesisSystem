@@ -1,4 +1,4 @@
-import { setTargetPDF } from '@/features/importPdfSlice';
+import { setShowMask, setTargetPDF } from '@/features/importPdfSlice';
 import { useAppSelector } from '@/hooks/reduxHooks';
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Cascader, Checkbox, DatePicker, Input } from 'antd';
@@ -20,15 +20,12 @@ const options = [
 
 function ListItem({ item }: ListItemType) {
    const dateFormat = 'YYYY/MM/DD';
-   
    const dispatch = useDispatch()
-
-   
 
    function handleClick() {
       console.log("td点击了");
-      
       dispatch(setTargetPDF(item))
+      dispatch(setShowMask(true))
    }
 
    return (
