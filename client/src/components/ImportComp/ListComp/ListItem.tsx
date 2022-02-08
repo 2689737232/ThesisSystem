@@ -1,16 +1,16 @@
-import { setShowMask, setTargetPDF } from '@/features/importPdfSlice';
+import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/features/importPdfSlice';
 import { useAppSelector } from '@/hooks/reduxHooks';
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Cascader, Checkbox, DatePicker, Input } from 'antd';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import Item from 'antd/lib/list/Item';
 import { RcFile } from 'antd/lib/upload/interface';
 import moment from 'moment';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import "./ListItem.less"
 
-type ListItemType = {
-   item: RcFile
-}
+
 const options = [
    {
       value: 'Journal Article',
@@ -18,20 +18,33 @@ const options = [
    }
 ]
 
-function ListItem({ item }: ListItemType) {
+function ListItem({ file, id }: PDFType) {
    const dateFormat = 'YYYY/MM/DD';
    const dispatch = useDispatch()
+   const importPdf = useAppSelector(state => state.importPdf)
+
 
    function handleClick() {
-      console.log("td点击了");
-      dispatch(setTargetPDF(item))
+      dispatch(setTargetPDF(file))
       dispatch(setShowMask(true))
+   }
+
+   function onChange(e: CheckboxChangeEvent) {
+      if (e.target.checked) {
+         dispatch(pushId(id))
+      } else {
+         dispatch(removeId(id))
+      }
+   }
+
+   function cancel() {
+      dispatch(setCancelIds([id]))
    }
 
    return (
       <tr className='bpdy-tr'>
          <td>
-            <Checkbox />
+            <Checkbox onChange={onChange} />
          </td>
          <td>
             <Input className='input-author' placeholder="作者姓名" prefix={<UserOutlined />} />
@@ -39,7 +52,7 @@ function ListItem({ item }: ListItemType) {
          <td>
             <DatePicker picker="year" />
          </td>
-         <td onClick={handleClick} style={{ cursor: "pointer" }}>{item.name}</td>
+         <td onClick={handleClick} style={{ cursor: "pointer" }}>{file.name}</td>
          <td>
             <Input className='input-periodical' placeholder="输入期刊" />
          </td>
@@ -50,7 +63,7 @@ function ListItem({ item }: ListItemType) {
             <Cascader defaultValue={['Journal Article']} options={options} placeholder="请选择"></Cascader>
          </td>
          <td>
-            <Button>取消</Button>
+            <Button onClick={cancel}>取消</Button>
          </td>
          <td>
             <Button type="primary">提交</Button>

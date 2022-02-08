@@ -8,15 +8,10 @@ import "./ImportComp.less";
 import ListComp from './ListComp/ListComp';
 import Id from '@/util/Id';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
-import { setTargetPDF } from '@/features/importPdfSlice';
+import { PDFType, setCancelIds, setTargetPDF } from '@/features/importPdfSlice';
 import PdfReader from '../PdfReader/PdfReader';
-
-
 const { confirm } = Modal;
-export type PDFType = {
-    id: string,
-    file: RcFile
-}
+
 
 function ImportComp() {
     const maxCount = 80;
@@ -44,6 +39,16 @@ function ImportComp() {
         setTotalPageNum(pdfFiles.length)
     }, [pdfFiles]);
 
+    // 删除取消的项
+    useEffect(() => {
+
+        const temp = [...pdfFiles]
+        importState.cancelIds.forEach(cancelId => {
+            let i = temp.findIndex(pdf => pdf.id === cancelId)
+            temp.splice(i, 1)
+        })
+        setPdfFiles(temp)
+    }, [importState.cancelIds])
 
     const uploadProps = {
         action: "localhost:8000",
@@ -90,16 +95,17 @@ function ImportComp() {
     return <div className='import-container'>
         {importState.targetPDF ? <PdfReader pdf={importState.targetPDF}></PdfReader> : ""}
         <Row justify="end">
-            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+            <Col xs={10} sm={12} md={12} lg={12} xl={12}>
                 <Button onClick={showConfirm} icon={<ClearOutlined />}>清空</Button>
             </Col>
-            <Col xs={12} sm={12} md={12} lg={12} xl={12}>
+            <Col xs={14} sm={12} md={12} lg={12} xl={12}>
                 <Upload multiple {...uploadProps}>
                     <Button icon={<UploadOutlined />}>选择上传的文件</Button>
                 </Upload>
             </Col>
         </Row>
         <Divider />
+        {/* 内容主体 */}
         <Row className='middle-pdf-edit'>
             <ListComp originPdfs={pdfFiles}></ListComp>
         </Row>

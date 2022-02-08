@@ -1,14 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { RcFile } from "antd/lib/upload";
+export type PDFType = {
+   id: string,
+   file: RcFile
+}
 type InitStateType = {
-   importSlice: [],
+   importSlice: PDFType[],
    targetPDF: File | null,
-   showMask: boolean
+   showMask: boolean,
+   selectedIds: string[]  // 复选框选中的上传pdf,
+   cancelIds: string[]
 }
 const initialState: InitStateType = {
    importSlice: [],
    targetPDF: null,
-   showMask: false
+   showMask: false,
+   selectedIds: [],
+   cancelIds: []
 }
 
 export const importPdfsSlice = createSlice({
@@ -20,10 +28,25 @@ export const importPdfsSlice = createSlice({
       },
       setShowMask(state, action: PayloadAction<boolean>) {
          state.showMask = action.payload
+      },
+      setSelectedIds(state, action: PayloadAction<string[]>) {
+         state.selectedIds = action.payload
+      },
+      pushId(state, action: PayloadAction<string>) {
+         const temp = [...state.selectedIds, action.payload]
+         state.selectedIds = temp;
+      },
+      removeId(state, action: PayloadAction<string>) {
+         const temp = [...state.selectedIds]
+         const i = temp.indexOf(action.payload)
+         temp.splice(i, 1)
+         state.selectedIds = temp
+      },
+      setCancelIds(state, action: PayloadAction<string[]>) {
+         state.cancelIds = action.payload
       }
    }
 })
 
-
-export const { setTargetPDF,setShowMask } = importPdfsSlice.actions
+export const { setTargetPDF, setShowMask, setSelectedIds, pushId, removeId,setCancelIds } = importPdfsSlice.actions
 export default importPdfsSlice.reducer

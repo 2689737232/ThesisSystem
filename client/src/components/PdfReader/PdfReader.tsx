@@ -21,9 +21,8 @@ function PdfReader(props: PdfReaderProps) {
         //
         // Fetch the first page
         //
-
         const page = await pdf.getPage(1);
-        const scale = 1.5;
+        const scale = 1;
         const viewport = page.getViewport({ scale });
         // Support HiDPI-screens.
         const outputScale = window.devicePixelRatio || 1;

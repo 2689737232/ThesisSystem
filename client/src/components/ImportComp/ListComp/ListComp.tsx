@@ -1,9 +1,10 @@
 import React from 'react';
-import { PDFType } from '../ImportComp';
 import { Button, Checkbox, Divider } from 'antd';
 import { spawn } from 'child_process';
 import "./ListComp.less";
 import ListItem from './ListItem';
+import { PDFType, setCancelIds, setSelectedIds } from '@/features/importPdfSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 
 
 type ListComp = {
@@ -49,12 +50,21 @@ const headList = [
 ]
 
 function ListComp({ originPdfs }: ListComp) {
+   const importPdf = useAppSelector(state => state.importPdf)
+   const dispatch = useAppDispatch()
+
    function genHead() {
       return headList.map(item => <th key={item.id} className={`${item.class} head-item`}>{item.comp ? item.comp : item.name}</th>)
    }
 
    function genBody() {
-      return originPdfs.map(item => <ListItem item={item.file} key={item.id} />)
+      return originPdfs.map(item => <ListItem key={item.id} id={item.id} file={item.file} />)
+   }
+
+   function cancelSelected() {
+      const temp = [...importPdf.selectedIds]
+      dispatch(setCancelIds(temp))
+      dispatch(setSelectedIds([]))
    }
 
    if (!originPdfs || originPdfs.length === 0) return <div></div>
@@ -71,7 +81,11 @@ function ListComp({ originPdfs }: ListComp) {
             </tbody>
          </table>
       </div>
-      <Button className='submit-btn-all'>提交所有</Button>
+      <div className="btn-box">
+         <Button onClick={cancelSelected} className='cancel-btn-selected'>取消选中</Button>
+         <Button className='submit-btn-selected'>提交选中</Button>
+         <Button className='submit-btn-all'>提交所有</Button>
+      </div>
    </div>;
 }
 
