@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, SliceCaseReducers } from '@reduxjs/toolkit'
-import { WritableDraft } from 'immer/dist/internal'
-import { MenuType, MenuListType } from "../components/MenuComp/MenuComp"
-import menuNameMap from '../components/MenuNameMap'
+import { MenuType } from "../components/MenuComp/MenuComp"
+
 
 
 

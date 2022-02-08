@@ -7,6 +7,10 @@ import { uploadPDF } from '@/api/upload';
 import "./ImportComp.less";
 import ListComp from './ListComp/ListComp';
 import Id from '@/util/Id';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
+import { setTargetPDF } from '@/features/importPdfSlice';
+import PdfReader from '../PdfReader/PdfReader';
+
 
 const { confirm } = Modal;
 export type PDFType = {
@@ -22,12 +26,14 @@ function ImportComp() {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPageNum, setTotalPageNum] = useState(0)
     const id = new Id()
+    const importState = useAppSelector(state => state.importPdf)
+    const dispatch = useAppDispatch()
 
 
     async function handleUpload() {
         const formData = new FormData();
         pdfFiles.forEach(pdf => {
-            formData.append('pdfs[]', pdf)
+            formData.append('pdfs[]', pdf.file);
         })
         setUploading(true)
         // const result = await uploadPDF(formData)
@@ -68,6 +74,7 @@ function ImportComp() {
                 content: '清除所有已导入的信息',
                 onOk() {
                     setPdfFiles([])
+                    dispatch(setTargetPDF(null))
                 },
                 onCancel() {
                     console.log('Cancel');
@@ -81,6 +88,7 @@ function ImportComp() {
     }
 
     return <div className='import-container'>
+        {importState.targetPDF ? <PdfReader pdf={importState.targetPDF}></PdfReader> : ""}
         <Row justify="end">
             <Col xs={12} sm={12} md={12} lg={12} xl={12}>
                 <Button onClick={showConfirm} icon={<ClearOutlined />}>清空</Button>
@@ -93,7 +101,7 @@ function ImportComp() {
         </Row>
         <Divider />
         <Row className='middle-pdf-edit'>
-            <ListComp pdfFiles={pdfFiles}></ListComp>
+            <ListComp originPdfs={pdfFiles}></ListComp>
         </Row>
         <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>

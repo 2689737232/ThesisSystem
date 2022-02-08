@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
+import importPdfSlice from './features/importPdfSlice'
 import menuReducer from "./features/menuSlice"
 
 const store = configureStore({
    reducer: {
-      menu: menuReducer
+      menu: menuReducer,
+      importPdf: importPdfSlice
    }
 })
 export default store

@@ -1,3 +1,104 @@
+## 1.elasticsearch
+
+### 1.1安装
+核心功能是对数据进行检索，通过索引将文档写入es。
+
+- 集群安装，解压复制`master`、`slave1`、`slave2`。配置`config/elasticsearch.yml`
+```yml
+主节点
+node.name: master
+node.master: true
+network.host: 127.0.0.1
+
+从节点
+cluster.name: es-slave1
+node.name: slave1
+network.host: 127.0.0.1
+http.port: 9201
+discovery.zen.ping.unicast.hosts: ["127.0.0.1"]
+```
+
+- `ik分词器`对中文进行分词，`elasticsearch-analysis-ik`  在git仓库中下载下，解压到`elasticsearch`中的`pulgins/ik`文件夹下。自定义扩展词库，如要把`我是lala`看成是一个词，可以使用自定义扩展词库。在`ik`文件夹下`config`文件夹下创建一个`ext.dic`中添加`我是lala`。在`config/IKAnalysis.cfg.xml`中配置扩展词典的位置。
+
+
+### 1.2索引管理
+相当于是一个数据库。需要一个master节点、两个slave节点。  
+#### 新建索引  
+[![HQRacQ.png](https://s4.ax1x.com/2022/02/07/HQRacQ.png)](https://imgtu.com/i/HQRacQ)
+
+- 使用浏览器插件创建
+- 使用网络请求创建,或使用`kibana`中的`console`
+启动`kibana`访问`localhost:5601`,使用`console`，执行`put book`创建一个book索引。  
+
+**注意**1.索引名不能为大写字母、2.名称不能重复。
+
+#### 修改索引
+
+- 修改索引的副本数： `kibana`中
+```json
+PUT book/_settings
+{
+  "number_of_replicas": 3
+}
+```
+同理可以更新分片数。
+
+- 写入文档
+```json
+put book/_doc/1   // 表示像_doc中写入id为1的数据
+{
+    "title":"java从入门到精通"
+}
+```
+- 关闭写权限
+```json
+put book/_settings   // 表示像_doc中写入id为1的数据
+{
+   "blocks.write": true
+}
+```
+
+- 查看索引信息  
+`get book,test/_settings` 查看多个索引的信息  
+`get _all/_settings` 查看所有  
+
+- 打开\关闭索引  
+`post book/_close`    
+`post book/_open` 
+
+
+### 1.3 文档的删除和操作
+
+- 添加文档  
+可以使用put添加文档`put xxx/_doc/1` 1为id值.  
+如果不指定id需要使用`post`请求
+- 获取文档
+`get xxx/_doc/xxxx`  添加id值  
+#### 1.3.2根据id删除
+```json
+POST book/_delete_by_query
+{
+  "query":{
+    "term":{
+      "_id":"_Agq1H4BIrOECWjBvxUb"
+    }
+  }
+}
+```
+
+#### 1.3.3批量操作
+创建一个json文件，最后结尾需要空出一行
+```json
+{"index":{"_index":"user", "_id":"666"}}
+{"name": "lala"}
+{"update": {"_index":"user", "_id": "666"}}
+{"doc": {"name": "wawa"}}
+
+```
+发送`post`请求到`http://localhost:9200/user/_bulk`,请求头类型为`content-type:application/json`,添加json文件。  
+
+## django
+
 ### 安装mysql
 https://pymysql.readthedocs.io/en/latest/user/index.html  
 `pip3 install pymysql`,在`__init__.py`中添加

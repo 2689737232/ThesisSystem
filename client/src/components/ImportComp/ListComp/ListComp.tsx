@@ -1,13 +1,13 @@
 import React from 'react';
 import { PDFType } from '../ImportComp';
-import { Button, Checkbox } from 'antd';
+import { Button, Checkbox, Divider } from 'antd';
 import { spawn } from 'child_process';
 import "./ListComp.less";
 import ListItem from './ListItem';
 
 
 type ListComp = {
-   pdfFiles: PDFType[]
+   originPdfs: PDFType[]
 }
 const headList = [
    {
@@ -48,21 +48,19 @@ const headList = [
    }
 ]
 
-function ListComp({ pdfFiles }: ListComp) {
-
-
+function ListComp({ originPdfs }: ListComp) {
    function genHead() {
       return headList.map(item => <th key={item.id} className={`${item.class} head-item`}>{item.comp ? item.comp : item.name}</th>)
    }
 
    function genBody() {
-      return pdfFiles.map(item => <ListItem item={item.file} key={item.id} />)
+      return originPdfs.map(item => <ListItem item={item.file} key={item.id} />)
    }
 
-   if (!pdfFiles || pdfFiles.length === 0) return <div></div>
+   if (!originPdfs || originPdfs.length === 0) return <div></div>
    return <div className='wrapper-list'>
       <div className='list-comp'>
-         <table>
+         <table style={{ borderCollapse: "separate", borderSpacing: "0px 10px" }}>
             <thead>
                <tr>
                   {genHead()}
