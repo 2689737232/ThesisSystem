@@ -1,16 +1,15 @@
 import { uploadPDF } from '@/api/upload';
 import ProgressBar from '@/components/ProgressBar/ProgressBar';
 import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/features/importPdfSlice';
-import { useAppSelector } from '@/hooks/reduxHooks';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getUserInfo } from '@/util/user';
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Button, Cascader, Checkbox, DatePicker, Input, message, Spin } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Item from 'antd/lib/list/Item';
-import { RcFile } from 'antd/lib/upload/interface';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { submitEvents } from '../SubmitHandler';
 import "./ListItem.less"
 
 const options = [
@@ -22,7 +21,7 @@ const options = [
 
 function ListItem(pdf: PDFType) {
    const dateFormat = 'YYYY/MM/DD';
-   const dispatch = useDispatch()
+   const dispatch = useAppDispatch()
    const [datePicker, setDatePicker] = useState(moment())
    const [author, setAuthor] = useState("")
    const [periodical, setPeriodical] = useState("")
@@ -77,15 +76,24 @@ function ListItem(pdf: PDFType) {
       formdata.append("article_type", type[0]);
 
       // 开启加载动画
-      // const result = await uploadPDF(formdata)
+      const result = await uploadPDF(formdata)
       // let result = { data: { code: 200, message: "" } }
-      // if (result.data.code === 200) {
-      //    cancel()
-      //    message.success(`上传c成功`)
-      // } else {
-      //    message.error(`上传失败${result.data.message}`)
-      // }
+      if (result.data.code === 200) {
+         cancel()
+         message.success(`上传c成功`)
+         return true
+      } else {
+         message.error(`上传失败${result.data.message}`)
+         return false
+      }
    }
+
+   useEffect(() => {
+      submitEvents.push({
+         submit,
+         id: pdf.id
+      })
+   }, [])
 
    return (
       <tr className='bpdy-tr'>

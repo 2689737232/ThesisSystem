@@ -5,6 +5,7 @@ import "./ListComp.less";
 import ListItem from './ListItem';
 import { PDFType, setCancelIds, setSelectedIds } from '@/features/importPdfSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
+import { fireAllEvents, submitEvents } from '../SubmitHandler';
 
 
 type ListComp = {
@@ -68,6 +69,12 @@ function ListComp({ originPdfs }: ListComp) {
       dispatch(setSelectedIds([]))
    }
 
+   function submitAll() {
+      fireAllEvents() // 触发每一项的提交事件，完成提交所有
+      console.log(submitEvents);
+   }
+
+
    if (!originPdfs || originPdfs.length === 0) return <div></div>
    return <div className='wrapper-list'>
       <div className='list-comp'>
@@ -93,7 +100,7 @@ function ListComp({ originPdfs }: ListComp) {
             <Button onClick={cancelSelected} className='cancel-btn-selected'>取消选中</Button>
          </Col>
          <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
-            <Button className='submit-btn-all'>提交所有</Button>
+            <Button onClick={submitAll} className='submit-btn-all'>提交所有</Button>
          </Col>
       </Row>
    </div>;
