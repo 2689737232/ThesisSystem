@@ -97,9 +97,9 @@ POST book/_delete_by_query
 ```
 发送`post`请求到`http://localhost:9200/user/_bulk`,请求头类型为`content-type:application/json`,添加json文件。  
 
-## django
+## 2.django
 
-### 安装mysql
+###  2.1安装mysql
 https://pymysql.readthedocs.io/en/latest/user/index.html  
 `pip3 install pymysql`,在`__init__.py`中添加
 ```python
@@ -107,18 +107,18 @@ import pymysql
 pymysql.install_as_MySQLdb()
 ```
 
-### 创建一个应用
+### 2.2创建一个应用
 
 `python manage.py startapp login`  
 
-### 创建数据模型
+### 2.3创建数据模型
 
 在models.py中创建模型类，使用`python manage.py makemigrations `，`python manage.py migrate`.将数据库状态与当前的模型集和迁移同步。  
 在使用makemigrations后可以使用`python manage.py sqlmigrate xxx 0001`查看数据库创建脚本。  
 使用`python manage.py shell`启动 Python 交互式解释器。  
 
 
-### 安装 djangorestframework
+### 2.4安装 djangorestframework
 `pip install djangorestframework`  
 `pip install markdown`  
 `pip install django-filter`
@@ -138,12 +138,12 @@ INSTALLED_APPS = [
 ]
 ```
 
-### 模型
+### 2.5模型
 
 如果自己在模型中添加了主键`id = models.BigAutoField(primary_key=True)`django不会再自动的添加主键。  
 模型出错`migrate`错误，实在不行删除目录`migrations`下的除`__init__.py`的文件。再重新`makemigrations`、`migrate`
 
-### 配置静态文件地址
+### 2.6配置静态文件地址
 
 在`settings.py`中配置
 ```python
@@ -152,7 +152,7 @@ STATIC_ROOT = os.path.abspath("static")
 ```
 再使用`python manage.py collectstatic`会将其他应用下的静态文件复制到`STATIC_ROOT`下。 
 
-### 自定义错误页面
+### 2.7自定义错误页面
 
 1. 设置`settings.py`中`DEBUG`为`False`
 1. 设置`settings.py`中`ALLOWED_HOSTS`
@@ -175,11 +175,11 @@ def page_not_found(request, exception):
     return HttpResponseNotFound(content="页面没有找到哦")
 ```
 
-### 创建超级用户
+### 2.8创建超级用户
 
 `python manage.py createsuperuser --email xxx@xx.com --username`
 
-### csrf
+### 2.9csrf
 
 https://docs.djangoproject.com/zh-hans/4.0/ref/csrf/
 
@@ -202,13 +202,23 @@ class CBV_View(View):
         return result(message="使用cbv中的post请求")
 ```
 
-### 登录
+### 2.10登录
 
 - 使用https传输
 - 使用bcrypt加密保存。
 https://github.com/pyca/bcrypt/
 
-### token
+### 2.11token
 - 使用pyjwt生成token
 参考
 https://blog.csdn.net/weixin_42134789/article/details/105898077
+
+
+
+### 2.12文件上传
+
+- 配置上传文件的默认路径，在`settings.py`中配置
+```python
+# 上传文件的保存路径 
+MEDIA_ROOT = BASE_DIR.joinpath("pdfs")
+```

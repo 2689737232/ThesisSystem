@@ -1,7 +1,9 @@
+import { uploadPDF } from '@/api/upload';
 import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/features/importPdfSlice';
 import { useAppSelector } from '@/hooks/reduxHooks';
+import { getUserInfo } from '@/util/user';
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Cascader, Checkbox, DatePicker, Input } from 'antd';
+import { Button, Cascader, Checkbox, DatePicker, Input, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Item from 'antd/lib/list/Item';
 import { RcFile } from 'antd/lib/upload/interface';
@@ -46,13 +48,32 @@ function ListItem({ file, id }: PDFType) {
       dispatch(setCancelIds([id]))
    }
 
-   function submit(){
-      console.log(datePicker);
-      console.log(author);
-      console.log(periodical);
-      console.log(lastModify);
-      console.log(type);
-      console.log(file.name);
+   async function submit() {
+      const userName = localStorage.getItem("user");
+      if (!userName) {
+         message.error('没有用户信息，请重新登录！');
+         return false
+      }
+     
+      const { token } = await getUserInfo()
+      const userId = token.data.no
+      if (!userId) {
+         message.error('没有用户信息，请重新登录！');
+         return false
+      }
+   
+      // 构建formData上传数据
+      var formdata = new FormData();
+      formdata.append("pdf", file, file.name);
+      formdata.append("user", userId);
+      formdata.append("author", author);
+      formdata.append("year", datePicker.format("yyyy"));
+      formdata.append("pdf_title", file.name);
+      formdata.append("periodical", periodical);
+      formdata.append("last_modify", lastModify.format("yyyy-MM-DD"));
+      formdata.append("article_type", type[0]);
+
+      uploadPDF(formdata)
    }
 
    return (

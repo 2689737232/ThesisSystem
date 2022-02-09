@@ -17,6 +17,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -103,6 +105,10 @@ DATABASES = {
         'CHARSET': 'utf8mb4'
     }
 }
+
+# 上传文件的保存路径 
+MEDIA_ROOT = BASE_DIR.joinpath("pdfs")
+MEDIA_URL = "/pdfs/"  # 表示以这个请求开始的是加载pdfs资源
 
 
 # Password validation

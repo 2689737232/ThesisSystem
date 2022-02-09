@@ -3,11 +3,12 @@ from . import views
 from .view.Menu import Menu
 from .view.Function import Function
 from .view.Token import Token
-
+from .view.PdfView import Pdf
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
     path("auth", views.AuthView.as_view(), name="auth"),
     path("menu", Menu.as_view(), name="menu"),
     path("function", Function.as_view(), name="function"),
+    path("pdf", Pdf.as_view(), name="pdf"),
     path("token", Token.as_view(), name="token")
 ]
