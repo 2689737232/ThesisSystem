@@ -1,4 +1,5 @@
-import { request } from "./base";
+import { request, ResultTemp } from "./base";
+
 
 type UploadData = {
    user: string,
@@ -12,7 +13,7 @@ type UploadData = {
 }
 
 export async function uploadPDF(formData: FormData) {
-   return await request.post("user/pdf", formData, {
+   return await request.post<ResultTemp>("user/pdf", formData, {
       headers: {
          'Content-type': "multipart/form-data"
       }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Checkbox, Divider } from 'antd';
+import { Button, Checkbox, Col, Divider, Row } from 'antd';
 import { spawn } from 'child_process';
 import "./ListComp.less";
 import ListItem from './ListItem';
@@ -62,6 +62,7 @@ function ListComp({ originPdfs }: ListComp) {
    }
 
    function cancelSelected() {
+      if (importPdf.selectedIds.length === 0) return
       const temp = [...importPdf.selectedIds]
       dispatch(setCancelIds(temp))
       dispatch(setSelectedIds([]))
@@ -76,16 +77,25 @@ function ListComp({ originPdfs }: ListComp) {
                   {genHead()}
                </tr>
             </thead>
-            <tbody>
+            <tbody className='tbody-list'>
                {genBody()}
             </tbody>
          </table>
       </div>
-      <div className="btn-box">
-         <Button onClick={cancelSelected} className='cancel-btn-selected'>取消选中</Button>
-         <Button className='submit-btn-selected'>提交选中</Button>
-         <Button className='submit-btn-all'>提交所有</Button>
-      </div>
+      <Row>
+         <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
+            <span className='tip-span'>总共{originPdfs.length}项</span>
+         </Col>
+         <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
+            <Button className='submit-btn-selected'>提交选中</Button>
+         </Col>
+         <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
+            <Button onClick={cancelSelected} className='cancel-btn-selected'>取消选中</Button>
+         </Col>
+         <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
+            <Button className='submit-btn-all'>提交所有</Button>
+         </Col>
+      </Row>
    </div>;
 }
 

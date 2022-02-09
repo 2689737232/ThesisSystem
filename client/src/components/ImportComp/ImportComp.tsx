@@ -16,32 +16,14 @@ const { confirm } = Modal;
 function ImportComp() {
     const maxCount = 80;
     const [pdfFiles, setPdfFiles] = useState<PDFType[]>([]);
-    const [uploading, setUploading] = useState(false)
-    const [isModalVisible, setIsModalVisible] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
-    const [totalPageNum, setTotalPageNum] = useState(0)
     const id = new Id()
     const importState = useAppSelector(state => state.importPdf)
     const dispatch = useAppDispatch()
 
 
-    async function handleUpload() {
-        const formData = new FormData();
-        pdfFiles.forEach(pdf => {
-            formData.append('pdfs[]', pdf.file);
-        })
-        setUploading(true)
-        // const result = await uploadPDF(formData)
-    }
-
-    useEffect(() => {
-        console.log(pdfFiles);
-        setTotalPageNum(pdfFiles.length)
-    }, [pdfFiles]);
-
     // 删除取消的项
     useEffect(() => {
-
         const temp = [...pdfFiles]
         importState.cancelIds.forEach(cancelId => {
             let i = temp.findIndex(pdf => pdf.id === cancelId)
@@ -62,11 +44,6 @@ function ImportComp() {
                 setPdfFiles(state => [...state, { file, id: id.genId(file.name) }])
             } else message.error(`${file.name} 不是一个pdf格式文件`);
             return false;
-        },
-        onChange: (info: UploadChangeParam<object>) => {
-            // console.log(info.fileList);
-        },
-        customRequest() {
         }
     }
 
@@ -87,13 +64,9 @@ function ImportComp() {
             });
         }
     }
-
-    function onPageChange(pageNumber: number) {
-        console.log('Page: ', pageNumber);
-    }
-
     return <div className='import-container'>
         {importState.targetPDF ? <PdfReader pdf={importState.targetPDF}></PdfReader> : ""}
+        { }
         <Row justify="end">
             <Col xs={10} sm={12} md={12} lg={12} xl={12}>
                 <Button onClick={showConfirm} icon={<ClearOutlined />}>清空</Button>

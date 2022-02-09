@@ -1,3 +1,4 @@
 node_modules
 server/Lib
 server/Scripts
+server/thesis_server/pdfs/*

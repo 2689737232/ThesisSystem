@@ -6,7 +6,7 @@ class Id {
    }
 
    genId(name: string) {
-      return `id${name}${this.count}${new Date().getTime()}`
+      return `id${name}${this.count++}${new Date().getTime() + Math.ceil(Math.random() * 10)}`
    }
 }
 

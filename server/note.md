@@ -221,4 +221,16 @@ https://blog.csdn.net/weixin_42134789/article/details/105898077
 ```python
 # 上传文件的保存路径 
 MEDIA_ROOT = BASE_DIR.joinpath("pdfs")
+# 配置下载文件时的路径
+MEDIA_URL = "/pdfs/"  # 表示以这个请求开始的是加载pdfs资源
 ```
+- 然后在总路由中配置
+```python
+# 表示以/pdfs/的请求，路由到到 MEDIA_ROOT这个位置中
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+**上传文件**
+- 前端需要设置请求头的`'Content-type': "multipart/form-data"` 
+- django中post请求里，可以通过`request.POST['键']`和`request.FILES['键'] ` 取到请求的数据和文件
+- 在定义模型时，对于文件类型可以使用`Model.FileFiled(upload_to="xxx")`指定保存

@@ -9,14 +9,18 @@ type InitStateType = {
    targetPDF: File | null,
    showMask: boolean,
    selectedIds: string[]  // 复选框选中的上传pdf,
-   cancelIds: string[]
+   cancelIds: string[],
+   loadingAnimate: boolean,
+   uploadIds: string[]        // 需要上传的文件id
 }
 const initialState: InitStateType = {
    importSlice: [],
    targetPDF: null,
    showMask: false,
    selectedIds: [],
-   cancelIds: []
+   cancelIds: [],
+   loadingAnimate: false,
+   uploadIds: []
 }
 
 export const importPdfsSlice = createSlice({
@@ -44,9 +48,12 @@ export const importPdfsSlice = createSlice({
       },
       setCancelIds(state, action: PayloadAction<string[]>) {
          state.cancelIds = action.payload
+      },
+      setUploadIds(state, action: PayloadAction<string[]>) {
+         state.uploadIds = action.payload
       }
    }
 })
 
-export const { setTargetPDF, setShowMask, setSelectedIds, pushId, removeId,setCancelIds } = importPdfsSlice.actions
+export const { setTargetPDF, setShowMask, setSelectedIds, pushId, removeId, setCancelIds } = importPdfsSlice.actions
 export default importPdfsSlice.reducer
