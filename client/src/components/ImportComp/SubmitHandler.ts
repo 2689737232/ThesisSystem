@@ -22,6 +22,12 @@ export function interrupt() {
    flag = false;
 }
 
+
+export function clearItem(submiteEvent: SubmiteEvent) {
+   let index = submitEvents.findIndex(item => item.id === submiteEvent.id);
+   submitEvents.splice(index, 1)
+}
+
 // 触发每一个提交按钮事件，用于实现提交所有功能
 export async function fireAllEvents(callBacksObj?: FireProps): Promise<boolean> {
    flag = true

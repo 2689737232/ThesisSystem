@@ -1,5 +1,3 @@
-import { uploadPDF } from '@/api/upload';
-import ProgressBar from '@/components/ProgressBar/ProgressBar';
 import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/features/importPdfSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getUserInfo } from '@/util/user';
@@ -9,7 +7,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Item from 'antd/lib/list/Item';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { submitEvents } from '../SubmitHandler';
+import { clearItem, submitEvents } from '../SubmitHandler';
 import "./ListItem.less"
 
 const options = [
@@ -27,8 +25,6 @@ function ListItem(pdf: PDFType) {
    const [periodical, setPeriodical] = useState("")
    const [lastModify, setLastModify] = useState(moment())
    const [type, setType] = useState(['Journal Article'])
-
-   console.log("重新渲染");
 
 
    function handleClick() {
@@ -97,11 +93,17 @@ function ListItem(pdf: PDFType) {
    }
 
    useEffect(() => {
-      submitEvents.push({
+      const item = {
          submit,
          id: pdf.id,
          args: [false]
-      })
+      }
+      submitEvents.push(item);
+
+      return () => {
+         clearItem(item)
+         console.log(submitEvents);
+      }
    }, [])
 
    return (
