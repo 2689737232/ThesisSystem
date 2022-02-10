@@ -1,0 +1,31 @@
+@import "@/style/var.less";
+
+.progresss-wrapper {
+   .full;
+   position        : fixed;
+   left            : 0;
+   top             : 0;
+   background-color: rgba(158, 158, 158, 0.493) ;
+   z-index         : 99999;
+   
+   .progress-bar {
+      .abs-center;
+      .flex-center-h;
+      .bbox;
+      padding         : 0 10%;
+      width           : 50%;
+      height          : 60%;
+      background-color: rgb(255, 255, 255);
+      border-radius   : 2rem;
+
+      .progress-item {
+         flex-grow: 1;
+      }
+
+      .item-progress,
+      .item-btn {
+         .flex-center;
+         flex-grow: 2;
+      }
+   }
+}

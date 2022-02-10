@@ -50,7 +50,8 @@ function ListItem(pdf: PDFType) {
       dispatch(setCancelIds([pdf.id]))
    }
 
-   async function submit() {
+   async function submit(showMessage?: boolean): Promise<boolean> {
+      if (showMessage === undefined) showMessage = true // 默认显示弹出上传结果信息
       const userName = localStorage.getItem("user");
       if (!userName) {
          message.error('没有用户信息，请重新登录！');
@@ -75,23 +76,32 @@ function ListItem(pdf: PDFType) {
       formdata.append("last_modify", lastModify.format("yyyy-MM-DD"));
       formdata.append("article_type", type[0]);
 
-      // 开启加载动画
-      const result = await uploadPDF(formdata)
-      // let result = { data: { code: 200, message: "" } }
-      if (result.data.code === 200) {
-         cancel()
-         message.success(`上传c成功`)
-         return true
-      } else {
-         message.error(`上传失败${result.data.message}`)
-         return false
-      }
+      // const result = await uploadPDF(formdata)
+      // if (result.data.code === 200) {
+      //    cancel()
+      //    if (showMessage) message.success(`上传c成功`)
+      //    return true
+      // } else {
+      //    if (showMessage) message.error(`上传失败${result.data.message}`)
+      //    return false
+      // }
+      await (function () {
+         return new Promise((res, rej) => {
+            setTimeout(() => {
+               res("ok")
+            }, 500)
+         })
+      })()
+
+      cancel()
+      return true
    }
 
    useEffect(() => {
       submitEvents.push({
          submit,
-         id: pdf.id
+         id: pdf.id,
+         args: [false]
       })
    }, [])
 

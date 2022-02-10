@@ -11,7 +11,8 @@ type InitStateType = {
    selectedIds: string[]  // 复选框选中的上传pdf,
    cancelIds: string[],
    loadingAnimate: boolean,
-   uploadIds: string[]        // 需要上传的文件id
+   uploadIds: string[],        // 需要上传的文件id
+   uploadLock: boolean       // 上传锁，如果正在上传中，不能导入新的文件
 }
 const initialState: InitStateType = {
    importSlice: [],
@@ -20,7 +21,8 @@ const initialState: InitStateType = {
    selectedIds: [],
    cancelIds: [],
    loadingAnimate: false,
-   uploadIds: []
+   uploadIds: [],
+   uploadLock: true
 }
 
 export const importPdfsSlice = createSlice({
@@ -51,6 +53,9 @@ export const importPdfsSlice = createSlice({
       },
       setUploadIds(state, action: PayloadAction<string[]>) {
          state.uploadIds = action.payload
+      },
+      setUploadBlock(state, action: PayloadAction<boolean>){
+         state.uploadLock = action.payload
       }
    }
 })

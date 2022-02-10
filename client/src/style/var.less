@@ -1,15 +1,15 @@
-@font-base-size: 14px;    // 页面文字的统一大小
-@font-base-color: #EFDAD7;  
+@font-base-size : 14px; // 页面文字的统一大小
+@font-base-color: #EFDAD7;
 
 
 .web-base-font {
    font-size: @font-base-size;
 }
 
-.abs-center{
-   position: absolute;
-   left: 50%;
-   top: 50%;
+.abs-center {
+   position : absolute;
+   left     : 50%;
+   top      : 50%;
    transform: translateX(-50%) translateY(-50%);
 }
 
@@ -18,13 +18,20 @@
    height: 100vh;
 }
 
+
+
 .flex-center {
    display        : flex;
    justify-content: center;
    align-items    : center;
 }
 
-.flex-right{
+.flex-center-h {
+   .flex-center;
+   flex-direction: column;
+}
+
+.flex-right {
    display        : flex;
    justify-content: right;
    align-items    : center;
@@ -40,6 +47,6 @@
    box-sizing: border-box;
 }
 
-.m0a{
+.m0a {
    margin: 0 auto;
 }

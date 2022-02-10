@@ -39,11 +39,15 @@ function ImportComp() {
         uploading: false,
         showUploadList: false,
         beforeUpload: (file: RcFile) => { // 返回false，实现手动上传
-            const isPDF = file.type === 'application/pdf';
-            if (isPDF) {
-                setPdfFiles(state => [...state, { file, id: id.genId(file.name) }])
-            } else message.error(`${file.name} 不是一个pdf格式文件`);
-            return false;
+            if (importState) {
+                const isPDF = file.type === 'application/pdf';
+                if (isPDF) {
+                    setPdfFiles(state => [...state, { file, id: id.genId(file.name) }])
+                } else message.error(`${file.name} 不是一个pdf格式文件`);
+                return false;
+            } else {
+                message.error("不能添加新文件，正在上传中")
+            }
         }
     }
 
@@ -66,7 +70,6 @@ function ImportComp() {
     }
     return <div className='import-container'>
         {importState.targetPDF ? <PdfReader pdf={importState.targetPDF}></PdfReader> : ""}
-        { }
         <Row justify="end">
             <Col xs={10} sm={12} md={12} lg={12} xl={12}>
                 <Button onClick={showConfirm} icon={<ClearOutlined />}>清空</Button>
