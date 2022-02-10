@@ -1,4 +1,5 @@
-import { message, Tabs } from 'antd';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { Button, message, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { setActiveMenu, setMenuQueue } from '../../features/menuSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
@@ -15,7 +16,7 @@ function ContentContainer() {
    const activateMenu = useAppSelector(state => state.menu.active)
    const dispatch = useAppDispatch()
    const [activeKey, setActiveKey] = useState(activateMenu?.code)
-
+   // const [fold, setFold] = useState(false)
 
    useEffect(() => {
       setActiveKey(activateMenu?.code)
@@ -69,12 +70,15 @@ function ContentContainer() {
          return result
       }
    }
-
+   // const operations = <Button onClick={() => setFold(!fold)}>
+   //    {fold ? <DownOutlined /> : <UpOutlined />}
+   // </Button>;
 
    return (
       <div id='content-id' className='content-container' style={{ height: "100%" }}>
          <Tabs
-            style={{ height: "100%" }}
+            // tabBarExtraContent={{ left: operations }}
+            className='tab-box'
             hideAdd
             type="editable-card"
             onChange={onChange}

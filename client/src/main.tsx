@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import 'antd/dist/antd.css';
 import { Provider } from 'react-redux'
 import store from "./store"
-
+import "@/style/init.less";
 
 ReactDOM.render(
   <Provider store={store}>

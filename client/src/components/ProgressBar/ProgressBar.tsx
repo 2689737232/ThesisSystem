@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Progress, Button } from 'antd';
+import { Progress, Button, Popconfirm, Modal } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import "./ProgressBar.less";
+import { interrupt } from '../ImportComp/SubmitHandler';
 
 
 function ProgressBar(props: { total: number, currentNum: number }) {
@@ -9,13 +10,15 @@ function ProgressBar(props: { total: number, currentNum: number }) {
    if (Number.isNaN(percent)) percent = 0
    percent = (percent * 100).toFixed(2)
    const [isMini, setIsMini] = useState(false)
+   const [visible, setVisible] = useState(false)
+
 
    const miniStyle = {
       wrapperStyle: {
          width: "30vw",
          height: "30vh",
          top: "70%",
-         left: "-7%",
+         left: "-8%",
          backgroundColor: "transparent"
       },
       barStyle: {
@@ -46,16 +49,33 @@ function ProgressBar(props: { total: number, currentNum: number }) {
       }
    }
 
+
+   // 
+   function cancel() {
+      interrupt()
+      setVisible(false)
+   }
+
    return (
       <div className='progresss-wrapper' style={style.wrapperStyle}>
          <div className="progress-bar" style={style.barStyle}>
-            <Progress className='progress-item item-progress' percent={percent} />
+            <Progress className='progress-item item-progress' percent={Number(percent)} />
             <div className="progress-item item-info">
                总共{props.total === undefined ? 0 : props.total},
                已经上传{props.currentNum === undefined ? 0 : props.currentNum}
             </div>
             <div className="progress-item item-btn">
-               <Button onClick={minify}>{isMini ? "最大化" : "最小化"}</Button>
+               <Button className='btn-item' onClick={minify}>{isMini ? "最大化" : "最小化"}</Button>
+               <Modal
+                  title="确认取消吗"
+                  visible={visible}
+                  onOk={cancel}
+                  onCancel={() => setVisible(false)}
+                  okText="确认"
+                  cancelText="取消"
+               >
+               </Modal>
+               <Button className='submit-btn-cancle' onClick={() => setVisible(true)}>取消</Button>
             </div>
          </div>
       </div>
@@ -63,3 +83,5 @@ function ProgressBar(props: { total: number, currentNum: number }) {
 }
 
 export default ProgressBar;
+
+

@@ -89,10 +89,9 @@ function ListItem(pdf: PDFType) {
          return new Promise((res, rej) => {
             setTimeout(() => {
                res("ok")
-            }, 500)
+            }, 1000)
          })
       })()
-
       cancel()
       return true
    }

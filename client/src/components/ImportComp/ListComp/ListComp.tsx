@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Col, Divider, message, Row } from 'antd';
+import { Button, Checkbox, Col, Divider, message, Popconfirm, Row } from 'antd';
 import { spawn } from 'child_process';
 import "./ListComp.less";
 import ListItem from './ListItem';
@@ -88,7 +88,7 @@ function ListComp({ originPdfs }: ListComp) {
    async function submitAll() {
       setShowProgress(true)
       // 触发每一项的提交事件，完成提交所有
-      fireAllEvents({
+      const result = await fireAllEvents({
          eachSubmit: (result: boolean) => {
             if (result) {
                setProgressState((preState: ProgressStateType) => {
@@ -108,6 +108,16 @@ function ListComp({ originPdfs }: ListComp) {
             })
          }
       })
+      if (!result) {  // 如果中断了，取消显示，重新设置
+         setShowProgress(false)
+         setProgressState((preState: ProgressStateType) => {
+            return {
+               currentNum: 0,
+               total: submitEvents.length
+            }
+         })
+         console.log(submitEvents.length);
+      }
    }
 
 
@@ -140,10 +150,12 @@ function ListComp({ originPdfs }: ListComp) {
                <Button onClick={cancelSelected} className='cancel-btn-selected'>取消选中</Button>
             </Col>
             <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
-               <Button onClick={submitAll} className='submit-btn-all'>提交所有</Button>
+               <Popconfirm title="提交所有吗" okText="是" cancelText="否" onConfirm={submitAll}>
+                  <Button className='submit-btn-all'>提交所有</Button>
+               </Popconfirm>
             </Col>
          </Row>
-      </div>
+      </div >
    );
 }
 
