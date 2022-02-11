@@ -29,6 +29,8 @@ export function interrupt() {
    flag = false;
 }
 
+export { flag as interruptFlag };
+
 // 每一项push进去执行
 export function pushSubmit(item: SubmiteEvent) {
    submitEvents.push(item)

@@ -66,6 +66,7 @@ function ListComp({ originPdfs }: ListComp) {
    useEffect(() => {
       onSubmitPush(function (item: SubmitEvent, subs: SubmitEvent[]) {
          setTotal(subs.length)
+         setCurrentNum(0)
       })
       return () => {
          setShowProgress(false)
