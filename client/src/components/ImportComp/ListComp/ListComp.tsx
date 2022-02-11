@@ -5,7 +5,7 @@ import "./ListComp.less";
 import ListItem from './ListItem';
 import { PDFType, setCancelIds, setSelectedIds } from '@/features/importPdfSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
-import { fireAllEvents, submitEvents } from '../SubmitHandler';
+import { fireAllEvents, onSubmitPush, submitEvents } from '../SubmitHandler';
 import ProgressBar from '@/components/ProgressBar/ProgressBar';
 
 
@@ -59,12 +59,14 @@ function ListComp({ originPdfs }: ListComp) {
    const importPdf = useAppSelector(state => state.importPdf)
    const dispatch = useAppDispatch()
    const [showProgress, setShowProgress] = useState(false)
-   const [progressState, setProgressState] = useState<ProgressStateType>({
-      total: 0,
-      currentNum: 0
-   })
+   const [total, setTotal] = useState(submitEvents.length)
+   const [currentNum, setCurrentNum] = useState(0)
+
 
    useEffect(() => {
+      onSubmitPush(function (item: SubmitEvent, subs: SubmitEvent[]) {
+         setTotal(subs.length)
+      })
       return () => {
          setShowProgress(false)
       }
@@ -89,34 +91,20 @@ function ListComp({ originPdfs }: ListComp) {
       setShowProgress(true)
       // 触发每一项的提交事件，完成提交所有
       const result = await fireAllEvents({
-         eachSubmit: (result: boolean) => {
-            if (result) {
-               setProgressState((preState: ProgressStateType) => {
-                  return {
-                     currentNum: preState.currentNum + 1,
-                     total: submitEvents.length
-                  }
-               })
-            }
+         eachSubmit: (result: boolean, item: SubmitEvent, i: number) => {
+            if (result) setCurrentNum(pre => pre + 1)
          },
          afterAllSubmitted: (submiteEvent: SubmitEvent[]) => {
             message.info("全部上传完毕")
             setShowProgress(false)
-            setProgressState({
-               currentNum: 0,
-               total: submitEvents.length
-            })
+            setTotal(0)
+            setCurrentNum(0)
          }
       })
       if (!result) {  // 如果中断了，取消显示，重新设置
          setShowProgress(false)
-         setProgressState((preState: ProgressStateType) => {
-            return {
-               currentNum: 0,
-               total: submitEvents.length
-            }
-         })
-         console.log(submitEvents.length);
+         setTotal(submitEvents.length)
+         setCurrentNum(0)
       }
    }
 
@@ -125,7 +113,7 @@ function ListComp({ originPdfs }: ListComp) {
    return (
       <div className='wrapper-list'>
          {
-            showProgress ? <ProgressBar {...progressState} /> : ""
+            showProgress ? <ProgressBar total={total} currentNum={currentNum} /> : ""
          }
          <div className='list-comp'>
             <table style={{ borderCollapse: "separate", borderSpacing: "0px 10px" }}>

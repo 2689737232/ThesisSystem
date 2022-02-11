@@ -7,7 +7,7 @@ import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Item from 'antd/lib/list/Item';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { clearItem, submitEvents } from '../SubmitHandler';
+import { clearItem, pushSubmit, submitEvents } from '../SubmitHandler';
 import "./ListItem.less"
 
 const options = [
@@ -85,7 +85,7 @@ function ListItem(pdf: PDFType) {
          return new Promise((res, rej) => {
             setTimeout(() => {
                res("ok")
-            }, 1000)
+            }, 300)
          })
       })()
       cancel()
@@ -93,16 +93,15 @@ function ListItem(pdf: PDFType) {
    }
 
    useEffect(() => {
-      const item = {
+      const submiteItem = {
          submit,
          id: pdf.id,
          args: [false]
       }
-      submitEvents.push(item);
-
+      
+      pushSubmit(submiteItem)
       return () => {
-         clearItem(item)
-         console.log(submitEvents);
+         clearItem(submiteItem)
       }
    }, [])
 

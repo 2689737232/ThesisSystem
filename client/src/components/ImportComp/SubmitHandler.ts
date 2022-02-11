@@ -15,45 +15,65 @@ type FireProps = {
 // 保存了导入页面中，每一个提交按钮的事件
 export let submitEvents: SubmiteEvent[] = []
 
-// 中断falg
-let flag = null;
+const subscribes: Function[] = []
 
+
+
+
+
+
+
+// 中断falg
+let flag: boolean | null = null;
 export function interrupt() {
    flag = false;
 }
 
-
-export function clearItem(submiteEvent: SubmiteEvent) {
-   let index = submitEvents.findIndex(item => item.id === submiteEvent.id);
-   submitEvents.splice(index, 1)
+// 每一项push进去执行
+export function pushSubmit(item: SubmiteEvent) {
+   submitEvents.push(item)
+   subscribes.forEach(func => func(item, submitEvents))
 }
+export function onSubmitPush(func: Function) {
+   subscribes.push(func)
+}
+
+// 清楚flag，如果有一项在列表中被清楚，那么循环的i需要减1
+let clearIndex = -1;
+export function clearItem(submiteEvent: SubmiteEvent) {
+   let index = submitEvents.findIndex(item => item.id === submiteEvent.id)
+   submitEvents.splice(index, 1)
+   clearIndex = index
+}
+
+
 
 // 触发每一个提交按钮事件，用于实现提交所有功能
 export async function fireAllEvents(callBacksObj?: FireProps): Promise<boolean> {
    flag = true
-   const newSubmitEvents: SubmiteEvent[] = []
-   for (let i = 0; i < submitEvents.length; i++) {
 
-      // 判断是否中断,中断后将剩余为提交的保留
-      if (!flag) {
-         flag = null;
-         submitEvents = submitEvents.slice(i, submitEvents.length)
-         return false
+   async function _loopEvents(): Promise<any> {
+      for (let i = 0; i < submitEvents.length; i++) {
+         // 判断是否中断,中断后将剩余为提交的保留
+         if (!flag) {
+            flag = null;
+            return false
+         }
+         const item = submitEvents[i]
+         const result = await item.submit.apply(null, item.args || [])
+         // 执行回调
+         if (callBacksObj && callBacksObj.eachSubmit) callBacksObj.eachSubmit(result, item, i)
+
+         // 在循环中，如果清楚了一项，i需要减1
+         if (clearIndex !== -1) {
+            clearIndex = -1
+            return _loopEvents()
+         }
       }
-
-      const item = submitEvents[i]
-      const result = await item.submit.apply(null, item.args || [])
-      // 如果已经提价成功，页面上的dom元素已经移除,对应的事件同样应该被移除
-      // 如果没有提交成功，事件需要保存下来。
-      if (!result) newSubmitEvents.push(item)
-
-      // 执行回调
-      if (callBacksObj && callBacksObj.eachSubmit) callBacksObj.eachSubmit(result)
+      if (callBacksObj && callBacksObj.afterAllSubmitted) callBacksObj.afterAllSubmitted(submitEvents)
+      return true
    }
-   if (callBacksObj && callBacksObj.afterAllSubmitted) callBacksObj.afterAllSubmitted(submitEvents)
-   submitEvents = newSubmitEvents
-
-   return true
+   return await _loopEvents()
 }
 
 

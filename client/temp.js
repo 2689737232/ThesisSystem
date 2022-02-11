@@ -27,4 +27,11 @@ async function exec() {
    console.log("执行完毕");
 }
 
+// 使用for await
+async function printFiles() {
+   for await (const contents of container) {
+      console.log(contents)
+   }
+}
+
 exec()
