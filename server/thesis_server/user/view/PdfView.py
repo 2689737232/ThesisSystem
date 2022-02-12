@@ -2,6 +2,7 @@ from datetime import date
 from email import errors
 
 from pymysql import Date
+from .Token import get_token
 from util.result import result, MyCode
 from rest_framework.views import APIView
 from user.decorators.permission_required import permission_required
@@ -13,6 +14,7 @@ from user.models import User
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Pdf(APIView):
+
     @permission_required(2)
     def post(self, request, *args, **kwords):
         user_id = request.POST['user']
@@ -43,4 +45,33 @@ class Pdf(APIView):
 
     @permission_required(3)
     def get(self, request, *args, **kwords):
-        print(request)
+        articles_type = request.query_params.get("articlesType", "-1")
+        page = int(request.query_params.get("page", 0))   # 第几页,默认第一页
+        num = int(request.query_params.get("num", 10))   # 一页几条数据，默认10条
+
+        if articles_type == -1:
+            return result(message="请求参数错误", code=MyCode.paramserror)
+        else:
+            start = page * num
+            end = (page+1) * num
+
+            # 获取我的、浏览页面数据
+            if articles_type == 1:
+                pdf_objs = PdfModel.objects.all()[start:end]
+                data = gen_list(pdf_objs)
+                return result(message="获取列表", data=data)
+            else:
+                user_no = get_token(request).get("no", "")
+                pdf_objs = PdfModel.objects.filter(user=User.objects.get(no=user_no))
+                data = gen_list(pdf_objs)
+                return result(message="获取列表", data=data)
+
+
+def gen_list(pdf_objs):
+    pdfs = []
+    for pdf in pdf_objs:
+        pdfs.append(pdf.dict_props)
+    data = {
+        "articles": pdfs
+    }
+    return data

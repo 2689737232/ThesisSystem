@@ -27,8 +27,24 @@ class Pdf(models.Model):
     #  path = models.FileField(upload_to="uploads/")  # 保存在项目pdfs/uploads文件夹下
     pdf = models.FileField(upload_to=user_directory_path)
 
+    @property
+    def dict_props(self):
+        upload_user = self.user
+        return {
+            "user_no": upload_user.no,
+            "author": self.author,
+            "year": self.year,
+            "pdf_title": self.pdf_title,
+            "periodical": self.periodical,
+            "last_modify": self.last_modify,
+            "article_type": self.article_type,
+            "score": self.score,
+            "pdf_path": self.pdf.name
+        }
 
 # 表示从模型中创建一个表单
+
+
 class PdfForm(ModelForm):
     class Meta:
         model = Pdf
