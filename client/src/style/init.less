@@ -1,6 +1,23 @@
 // 
 // 消除默认样式
 // 
+
+
 .ant-layout .layout-comp {
-   height: max-content;
+   min-height: 100%;
+   height    : max-content;
+}
+
+
+.flex-c {
+   display       : flex;
+   flex-direction: column;
+}
+
+.ant-layout-content {
+   .flex-c;
+}
+
+.site-layout-background {
+   flex: 1;
 }

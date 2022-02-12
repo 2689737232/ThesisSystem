@@ -23,6 +23,7 @@ class Pdf(models.Model):
     periodical = models.CharField(max_length=100, null=True)
     last_modify = models.CharField(max_length=50, null=True)
     article_type = models.CharField(max_length=100, null=True)
+    score = models.IntegerField(max_length=1, default=5)
     #  path = models.FileField(upload_to="uploads/")  # 保存在项目pdfs/uploads文件夹下
     pdf = models.FileField(upload_to=user_directory_path)
 

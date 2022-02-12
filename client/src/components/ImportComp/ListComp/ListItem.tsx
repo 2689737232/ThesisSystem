@@ -1,3 +1,4 @@
+import { uploadPDF } from '@/api/upload';
 import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/features/importPdfSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getUserInfo } from '@/util/user';
@@ -14,7 +15,7 @@ const options = [
    {
       value: 'Journal Article',
       label: 'Journal Article'
-   }
+   },
 ]
 
 function ListItem(pdf: PDFType) {
@@ -72,24 +73,24 @@ function ListItem(pdf: PDFType) {
       formdata.append("last_modify", lastModify.format("yyyy-MM-DD"));
       formdata.append("article_type", type[0]);
 
-      // const result = await uploadPDF(formdata)
-      // if (result.data.code === 200) {
-      //    cancel()
-      //    if (showMessage) message.success(`上传c成功`)
-      //    return true
-      // } else {
-      //    if (showMessage) message.error(`上传失败${result.data.message}`)
-      //    return false
-      // }
-      await (function () {
-         return new Promise((res, rej) => {
-            setTimeout(() => {
-               res("ok")
-            }, 300)
-         })
-      })()
-      cancel()
-      return true
+      const result = await uploadPDF(formdata)
+      if (result.data.code === 200) {
+         cancel()
+         if (showMessage) message.success(`上传c成功`)
+         return true
+      } else {
+         if (showMessage) message.error(`上传失败${result.data.message}`)
+         return false
+      }
+      // await (function () {
+      //    return new Promise((res, rej) => {
+      //       setTimeout(() => {
+      //          res("ok")
+      //       }, 300)
+      //    })
+      // })()
+      // cancel()
+      // return true
    }
 
    useEffect(() => {

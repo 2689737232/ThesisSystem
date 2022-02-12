@@ -40,3 +40,7 @@ class Pdf(APIView):
             except errors as e:
                 return result(message="上传失败", code=MyCode.servererror)
         return result(message="上传成功", data=pdf_title)
+
+    @permission_required(3)
+    def get(self, request, *args, **kwords):
+        print(request)

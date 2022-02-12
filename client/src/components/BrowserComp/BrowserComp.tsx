@@ -1,8 +1,11 @@
 import React from 'react';
+import "./BrowserComp.less";
+import BrowserList from './BrowserList/BrowserList';
+
 
 function BrowserComp() {
-  return <div>
-     浏览
+  return <div className='browser-container'>
+    <BrowserList showCollection/>
   </div>;
 }
 
