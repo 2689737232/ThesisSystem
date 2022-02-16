@@ -1,0 +1,655 @@
+{
+   "openapi": "3.0.1",
+   "info": {
+      "title": "论文推荐",
+      "description": "",
+      "version": "1.0.0"
+   },
+   "tags": [
+      {
+         "name": "登录注册"
+      },
+      {
+         "name": "测试"
+      },
+      {
+         "name": "菜单、功能"
+      },
+      {
+         "name": "elasticsearch"
+      },
+      {
+         "name": "上传下载"
+      },
+      {
+         "name": "文章获取"
+      }
+   ],
+   "paths": {
+      "/user/pdf": {
+         "get": {
+            "summary": "浏览文章",
+            "x-apifox-folder": "文章获取",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "文章获取"
+            ],
+            "parameters": [
+               {
+                  "name": "articlesType",
+                  "in": "query",
+                  "description": "",
+                  "required": false,
+                  "example": "2",
+                  "schema": {
+                     "type": "string"
+                  }
+               },
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDQ5MTU3NjUsImlhdCI6MTY0NDY1NjU2NSwiZGF0YSI6eyJ1c2VybmFtZSI6Ilx1Njc0ZVx1NTZkYiIsIm5vIjoiOTE4MjMwMTAyMjEiLCJyb2xlIjoyfX0.asIakTEa_I9HtsmgFE9jhfFwo3wA9xoPKUR02D0FMGM",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         },
+         "post": {
+            "summary": "上传pdf",
+            "x-apifox-folder": "上传下载",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "上传下载"
+            ],
+            "parameters": [
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDQ2NDUwMDQsImlhdCI6MTY0NDM4NTgwNCwiZGF0YSI6eyJ1c2VybmFtZSI6ImxhbGEiLCJubyI6IjkxODIzMDEwMjIwIiwicm9sZSI6MX19.gU5lPlYE-pdiMsQ49tsSBwdUR873kPq0EQJlwQeh-Bk",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "requestBody": {
+               "content": {
+                  "multipart/form-data": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {
+                           "pdf": {
+                              "type": "string",
+                              "example": "file://D:\\系统下载\\CSS3 Text.pdf",
+                              "format": "binary"
+                           }
+                        },
+                        "required": [
+                           "pdf"
+                        ]
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/user/_bulk": {
+         "post": {
+            "summary": "批量创建",
+            "x-apifox-folder": "elasticsearch",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "elasticsearch"
+            ],
+            "parameters": [
+               {
+                  "name": "Content-Type",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "application/json",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "requestBody": {
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "type": "undefined"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/v1/user/menu": {
+         "post": {
+            "summary": "初始化菜单数据",
+            "x-apifox-folder": "菜单、功能",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "菜单、功能"
+            ],
+            "parameters": [
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDMyOTE2MzYsImlhdCI6MTY0MzAzMjQzNiwiZGF0YSI6eyJ1c2VybmFtZSI6ImxhbGEiLCJubyI6IjkxODIzMDEwMjIwIiwicm9sZSI6MX19.VpuEVgKqpx6mVIMtCgns5nc_tvEw42Wj0hrOv7HMXdc",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "requestBody": {
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {}
+                     },
+                     "example": {
+                        "action": "init"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         },
+         "get": {
+            "summary": "获取所有菜单",
+            "x-apifox-folder": "菜单、功能",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "菜单、功能"
+            ],
+            "parameters": [
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDMyOTE2MzYsImlhdCI6MTY0MzAzMjQzNiwiZGF0YSI6eyJ1c2VybmFtZSI6ImxhbGEiLCJubyI6IjkxODIzMDEwMjIwIiwicm9sZSI6MX19.VpuEVgKqpx6mVIMtCgns5nc_tvEw42Wj0hrOv7HMXdc",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/v1/test/password": {
+         "post": {
+            "summary": "加密测试",
+            "x-apifox-folder": "测试",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "测试"
+            ],
+            "parameters": [],
+            "requestBody": {
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {}
+                     },
+                     "example": {
+                        "password": "我爱你啊123456safasg"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/v1/test/upload": {
+         "post": {
+            "summary": "上传文件测试",
+            "x-apifox-folder": "测试",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "测试"
+            ],
+            "parameters": [
+               {
+                  "name": "csrftoken",
+                  "in": "cookie",
+                  "description": "",
+                  "required": false,
+                  "example": "70nCJMsiysF8cCHBb3dfnbjMq913OASAVWaMGNv9g4hQBaC3NQqplXhDYLbNypMr",
+                  "schema": {
+                     "type": "string"
+                  }
+               },
+               {
+                  "name": "X-CSRFToken",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "70nCJMsiysF8cCHBb3dfnbjMq913OASAVWaMGNv9g4hQBaC3NQqplXhDYLbNypMr",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "requestBody": {
+               "content": {
+                  "multipart/form-data": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {
+                           "file": {
+                              "type": "string",
+                              "example": "file://E:\\下载\\周震(2020-2021-2)课表.pdf",
+                              "format": "binary"
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/v1/user/function": {
+         "post": {
+            "summary": "初始化功能",
+            "x-apifox-folder": "菜单、功能",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "菜单、功能"
+            ],
+            "parameters": [],
+            "requestBody": {
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {}
+                     },
+                     "example": {
+                        "action": "init"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/user/token": {
+         "post": {
+            "summary": "token验证",
+            "x-apifox-folder": "登录注册",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "登录注册"
+            ],
+            "parameters": [
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDQ2NDUwMDQsImlhdCI6MTY0NDM4NTgwNCwiZGF0YSI6eyJ1c2VybmFtZSI6ImxhbGEiLCJubyI6IjkxODIzMDEwMjIwIiwicm9sZSI6MX19.gU5lPlYE-pdiMsQ49tsSBwdUR873kPq0EQJlwQeh-Bk",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/v1/user/auth": {
+         "post": {
+            "summary": "登录",
+            "x-apifox-folder": "登录注册",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "登录注册"
+            ],
+            "parameters": [],
+            "requestBody": {
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {}
+                     },
+                     "example": {
+                        "userNo": "91823010220",
+                        "password": "0123456789"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         },
+         "get": {
+            "summary": "注册教师",
+            "x-apifox-folder": "登录注册",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "登录注册"
+            ],
+            "parameters": [
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDM0NDM4MjQsImlhdCI6MTY0MzE4NDYyNCwiZGF0YSI6eyJ1c2VybmFtZSI6ImxhbGEiLCJubyI6IjkxODIzMDEwMjIwIiwicm9sZSI6MX19.t9BsP5MxCGLloRHvD_U6_eKwKkvgshx6MDxzf4DBRbI",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "requestBody": {
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {}
+                     },
+                     "example": {
+                        "userNo": "91823010221",
+                        "password": "0123456789",
+                        "name": "李四",
+                        "role": "2",
+                        "age": "35"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/api/v1/test/user": {
+         "post": {
+            "summary": "添加用户",
+            "x-apifox-folder": "测试",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "测试"
+            ],
+            "parameters": [],
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/user/menu": {
+         "get": {
+            "summary": "根据用户获取菜单",
+            "x-apifox-folder": "菜单、功能",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [
+               "菜单、功能"
+            ],
+            "parameters": [
+               {
+                  "name": "Authorization",
+                  "in": "header",
+                  "description": "",
+                  "required": false,
+                  "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDM0NDUzNjEsImlhdCI6MTY0MzE4NjE2MSwiZGF0YSI6eyJ1c2VybmFtZSI6Ilx1Njc0ZVx1NTZkYiIsIm5vIjoiOTE4MjMwMTAyMjEiLCJyb2xlIjoyfX0.6iMakAJM5gu3ok8L8cHDe-WAy-K7sg2KhAGyKNGxvOs",
+                  "schema": {
+                     "type": "string"
+                  }
+               }
+            ],
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/": {
+         "post": {
+            "summary": "百度测试",
+            "x-apifox-folder": "",
+            "x-apifox-status": "developing",
+            "deprecated": false,
+            "description": "",
+            "tags": [],
+            "parameters": [],
+            "requestBody": {
+               "content": {
+                  "multipart/form-data": {
+                     "schema": {
+                        "type": "object",
+                        "properties": {
+                           "pdf": {
+                              "type": "string",
+                              "example": "file://D:\\系统下载\\计算机网络自顶向下方法官方答案(英文版).pdf",
+                              "format": "binary"
+                           }
+                        },
+                        "required": [
+                           "pdf"
+                        ]
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "成功",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "type": "object",
+                           "properties": {}
+                        },
+                        "examples": {}
+                     }
+                  }
+               }
+            }
+         }
+      }
+   },
+   "components": {
+      "schemas": {}
+   }
+}

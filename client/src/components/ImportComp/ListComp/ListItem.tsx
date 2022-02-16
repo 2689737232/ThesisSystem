@@ -48,6 +48,7 @@ function ListItem(pdf: PDFType) {
    }
 
    async function submit(showMessage?: boolean): Promise<boolean> {
+
       if (showMessage === undefined) showMessage = true // 默认显示弹出上传结果信息
       const userName = localStorage.getItem("user");
       if (!userName) {
@@ -99,7 +100,7 @@ function ListItem(pdf: PDFType) {
          id: pdf.id,
          args: [false]
       }
-      
+
       pushSubmit(submiteItem)
       return () => {
          clearItem(submiteItem)
@@ -125,13 +126,13 @@ function ListItem(pdf: PDFType) {
             <DatePicker value={lastModify} onChange={(date: moment.Moment | null) => date ? setLastModify(date) : null} defaultValue={moment(new Date(), dateFormat)} format={dateFormat} />
          </td>
          <td>
-            <Cascader value={type} onChange={(value: string) => { setType([value]) }} options={options} placeholder="请选择"></Cascader>
+            <Cascader value={type} onChange={(value: any) => { setType([value as string]) }} options={options} placeholder="请选择"></Cascader>
          </td>
          <td>
             <Button onClick={cancel}>取消</Button>
          </td>
          <td>
-            <Button onClick={submit} type="primary">提交</Button>
+            <Button onClick={() => submit(true)} type="primary">提交</Button>
          </td>
       </tr>
    );

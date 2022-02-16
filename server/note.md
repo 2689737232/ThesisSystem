@@ -234,3 +234,12 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 - 前端需要设置请求头的`'Content-type': "multipart/form-data"` 
 - django中post请求里，可以通过`request.POST['键']`和`request.FILES['键'] ` 取到请求的数据和文件
 - 在定义模型时，对于文件类型可以使用`Model.FileFiled(upload_to="xxx")`指定保存
+
+
+
+## 3 部署
+
+使用docker部署项目
+
+参考：  
+- https://segmentfault.com/a/1190000038559170

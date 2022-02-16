@@ -10,7 +10,7 @@ const { resolve } = require("path");
 const environment = process.env.environment;
 
 
-console.log(resolve(__dirname, "./src"));
+console.log(environment);
 
 // https://vitejs.dev/config/
 export default defineConfig({

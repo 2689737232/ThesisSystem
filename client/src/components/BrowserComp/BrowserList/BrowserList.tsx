@@ -106,7 +106,7 @@ function BrowserList(props: BrowserList) {
             onHeaderRow={onHeaderRow}
             className='browser-table'
             columns={columns}
-            rowKey={record => record.login.uuid}
+            // rowKey={record => record.login.uuid}
             dataSource={data}
             pagination={pagination}
             loading={loading}

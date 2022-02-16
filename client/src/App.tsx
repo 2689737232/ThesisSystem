@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
 import './App.css'
 import Home from './pages/Home'

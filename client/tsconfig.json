@@ -29,6 +29,8 @@
     }
   },
   "include": [
-    "./src"
-, "src/pages/.tsx"  ],
+    "./src",
+    "src/pages/.tsx",
+    "src/env.d.ts"
+  ],
 }
