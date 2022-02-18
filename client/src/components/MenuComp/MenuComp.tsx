@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Menu} from 'antd';
-import {CopyOutlined, SolutionOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Menu } from 'antd';
+import { CopyOutlined, SolutionOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import "./MenuComp.less"
-import {getMenuList} from '@/api/menu';
-import {useAppDispatch, useAppSelector} from "../../hooks/reduxHooks"
-import {pushMenuQueue, setActiveMenu, setMenuQueue} from '@/features/menuSlice';
+import { getMenuList } from '@/api/menu';
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks"
+import { pushMenuQueue, setActiveMenu, setMenuQueue } from '@/features/menuSlice';
 import menuNameMap from '../MenuNameMap';
 
 
@@ -60,20 +60,22 @@ function MenuComp(props: MenuComp) {
 
     function genMenuItems() {
         return menuList.map(item => {
-            const Icon = menuNameMap[item.name].Icon;
-            return <Menu.Item
-                onClick={() => {
-                    handleClick(item)
-                }}
-                key={item.id}
-                icon={<Icon/> || <CopyOutlined/>}>
-                {item.name}
-            </Menu.Item>
+            const menu = menuNameMap[item.name]
+            if (menu) {
+                return <Menu.Item
+                    onClick={() => {
+                        handleClick(item)
+                    }}
+                    key={item.id}
+                    icon={<menu.Icon /> || <CopyOutlined />}>
+                    {item.name}
+                </Menu.Item>
+            }
         })
     }
 
     return <div className={props.className}>
-        <Menu style={{height: "100%"}} selectedKeys={[activeIndex]} mode="inline" defaultSelectedKeys={[activeIndex]}>
+        <Menu style={{ height: "100%" }} selectedKeys={[activeIndex]} mode="inline" defaultSelectedKeys={[activeIndex]}>
             {genMenuItems()}
         </Menu>
     </div>;

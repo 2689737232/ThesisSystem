@@ -35,7 +35,8 @@ router.register(r'groups', views.GroupViewSet)
 urls = [
     path('user/', include('user.urls')),
     path('test/', include('test_l.urls')),
-    path('api-test/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-test/', include('rest_framework.urls', namespace='rest_framework')),
+    path("file/", include('file.urls'))
 ]
 
 urlpatterns = [
@@ -44,5 +45,5 @@ urlpatterns = [
     path("api/v1/", include(urls)),
 ]
 # 表示请求到 /pdfs/ 请求到 MEDIA_ROOT
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 handler404 = page_not_found

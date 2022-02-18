@@ -136,20 +136,21 @@ def addUser(user_no, password, role, name,  age, save_id):
     transaction.savepoint_commit(save_id)
     return user
 
-
+# 添加对于用户权限
 def add_user_permission(user: User):
     user_menus = []
     user_function = []
-    if user.role == '1':    # 管理员
+    if user.role == 1:    # 管理员
         user_menus = menu_code_dict.keys()
         user_function = function_code_dict.keys()
-    elif user.role == '2':  # 教师
-        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户"]
+    elif user.role == 2:  # 教师
+        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户", "收藏"]
         user_function = ["浏览我的文档", "删除我的文档",
-                         "修改自己文档", "浏览其他文献", "添加学生", "导入文档"]
-    elif user.role == '3':  # 学生
-        user_menus = ["我的文献", "浏览", "回收站", "导入"]
-        user_function = ["浏览我的文档", "删除我的文档", "修改自己文档", "浏览其他文献",  "导入文档"]
+                         "修改自己文档", "浏览其他文献", "添加学生", "导入文档", "读取收藏", "删除收藏", "添加收藏"]
+    elif user.role == 3:  # 学生
+        user_menus = ["我的文献", "浏览", "回收站", "导入", "收藏"]
+        user_function = ["浏览我的文档", "删除我的文档", "修改自己文档",
+                         "浏览其他文献",  "导入文档", "读取收藏", "删除收藏", "添加收藏"]
     else:
         user_menus = ["浏览"]
         user_function = ["浏览其他文献"]
@@ -162,19 +163,16 @@ def set_user_menu_function(user_menus, user_functions, user):
 
     for mk in all_menu:
         menu = Menu.objects.filter(code=menu_code_dict[mk]).first()
-        if mk in user_menus:
-            UserMenus(user=user, menu=menu, state=1).save()
-        else:
-            UserMenus(user=user, menu=menu, state=2).save()
+        state = 1
+        if mk not in user_menus: state = 2
+        UserMenus(user=user, menu=menu, state=state).save()
 
     for fk in all_function:
         function = Function.objects.filter(
             code=function_code_dict[fk]).first()
-        if fk in user_functions:
-            UserFunctions(user=user, function=function, state=1).save()
-        else:
-            UserFunctions(user=user, function=function, state=2).save()
-
+        state = 1
+        if fk not in user_functions: state = 2
+        UserFunctions(user=user, function=function, state=state).save()
 
 # 判断用户是否存在
 def userExist(user_no: str):
@@ -183,3 +181,11 @@ def userExist(user_no: str):
         return False
     else:
         return True
+
+
+# 初始化用户的所有权限
+def init_user_permission(user):
+    UserMenus.objects.filter(user=user).delete()
+    UserFunctions.objects.filter(user=user).delete()
+    add_user_permission(user=user)
+    

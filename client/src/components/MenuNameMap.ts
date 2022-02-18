@@ -1,13 +1,12 @@
 // 菜单名：菜单组件
 // 配置主页菜单名对应的图标、每个菜单应用对应的子组件
-import { SolutionOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import React, { ReactNode } from 'react';
+import { FolderOpenOutlined, SolutionOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import AddUser from './AddUser/AddUser';
 import MyArticle from './ArticleComp/MyMyArticle';
 import BrowserComp from './BrowserComp/BrowserComp';
 import ImportComp from './ImportComp/ImportComp';
 import Permission from './Permission/Permission';
-import RecycleComp from './RecycleComp/RecycleComp';
+import MyCollection from './MyCollection/MyCollection';
 
 const menuNameMap: { [key: string]: any } = {
    "我的文献": {
@@ -18,9 +17,9 @@ const menuNameMap: { [key: string]: any } = {
       Icon: VideoCameraOutlined,
       SubComp: BrowserComp
    },
-   "回收站": {
-      Icon: UploadOutlined,
-      SubComp: RecycleComp
+   "收藏": {
+      Icon: FolderOpenOutlined,
+      SubComp: MyCollection
    },
    "添加用户": {
       Icon: UserOutlined,

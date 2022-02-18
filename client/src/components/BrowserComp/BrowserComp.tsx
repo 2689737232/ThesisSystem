@@ -5,7 +5,7 @@ import BrowserList from './BrowserList/BrowserList';
 
 function BrowserComp() {
   return <div className='browser-container'>
-    <BrowserList showCollection/>
+    <BrowserList showCollection browserType={1}/>
   </div>;
 }
 

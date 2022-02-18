@@ -1,23 +1,22 @@
-import { Table } from 'antd';
-import React, { Key, useEffect, useRef, useState } from 'react'
+import { getArticles, RequestArticleParams } from '@/api/article';
+import { Checkbox, Table } from 'antd';
+import React, { useEffect, useState } from 'react'
 import "./BrowserList.less";
+
 
 // 表头
 const columnsInit = [
    {
       title: '收藏',
       dataIndex: 'collection',
-      render: (name: { first: any; last: any; }) => `${name.first} ${name.last}`,
-      width: '7%',
+      render: () => <Checkbox />,
+      // width: '7%',
    },
    {
       title: '作者',
       dataIndex: 'author',
-      // filters: [
-      //    { text: 'Male', value: 'male' },
-      //    { text: 'Female', value: 'female' },
-      // ],
-      width: '10%',
+      render: (author: string) => author ? author : "(空)",
+      // width: '10%',
    },
    {
       title: '年份',
@@ -26,33 +25,37 @@ const columnsInit = [
       //    { text: 'Male', value: 'male' },
       //    { text: 'Female', value: 'female' },
       // ],
-      width: '10%',
+      // width: '10%',
    },
    {
       title: '标题',
       dataIndex: 'title',
-      width: "30%"
+      render(title: string, record: any, index: number) {
+         return <a target="_blank" href={`pdfs/${record.pdfPath}`}>{title}</a>
+      },
+      // width: "30%"
    },
    {
       title: '评分',
       dataIndex: 'score',
-      width: "10%"
+      // width: "10%"
    },
    {
       title: '最后更新',
       dataIndex: 'lastModify',
-      width: "10%"
+      // width: "10%"
    },
    {
       title: '文献类型',
       dataIndex: 'articleType',
-      width: "10%"
+      // width: "10%"
    },
 ];
 
 type BrowserList = {
    [key: string]: any
-   showCollection?: boolean
+   showCollection?: boolean,
+   browserType: 1 | 2 | 3  // 我的、浏览、收藏
 }
 
 function BrowserList(props: BrowserList) {
@@ -62,7 +65,7 @@ function BrowserList(props: BrowserList) {
       current: 1,
       pageSize: 10,
    })
-   const [loading, setLoading] = useState(false)
+   const [loading, setLoading] = useState(true)
 
    const getRandomuserParams = (params: { pagination: { pageSize: any; current: any; }; }) => ({
       results: params.pagination.pageSize,
@@ -85,11 +88,19 @@ function BrowserList(props: BrowserList) {
    };
 
    useEffect(() => {
-      if(!props.showCollection) {
+      if (!props.showCollection) {
          setColumns(pre => pre.filter(item => item.title !== "收藏"))
       }
-      // 拉取数据
-      // fetch({ pagination });
+      async function inner() {
+         // 拉取数据
+         const response = await getArticles({ articlesType: props.browserType })
+         console.log(response);
+         if (response.data.data) {
+            setData(response.data.data.articles)
+         }
+         setLoading(false)
+      }
+      inner()
    }, [])
 
    function onHeaderRow(columns: any, index: any) {
@@ -103,10 +114,9 @@ function BrowserList(props: BrowserList) {
    return (
       <div className='browser-list-container'>
          <Table
-            onHeaderRow={onHeaderRow}
             className='browser-table'
             columns={columns}
-            // rowKey={record => record.login.uuid}
+            rowKey={record => (record as any).id}
             dataSource={data}
             pagination={pagination}
             loading={loading}

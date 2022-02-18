@@ -45,21 +45,23 @@ class Pdf(APIView):
 
     @permission_required(3)
     def get(self, request, *args, **kwords):
+        # 请求文章类型  1为所有文章  2为我的文章
         articles_type = request.query_params.get("articlesType", "-1")
         page = int(request.query_params.get("page", 0))   # 第几页,默认第一页
         num = int(request.query_params.get("num", 10))   # 一页几条数据，默认10条
 
-        if articles_type == -1:
+        if articles_type == "-1":
             return result(message="请求参数错误", code=MyCode.paramserror)
         else:
             start = page * num
             end = (page+1) * num
-
-            # 获取我的、浏览页面数据
-            if articles_type == 1:
+            # 1我的文献 2为所有  3为我的收藏
+            if articles_type == "1":
                 pdf_objs = PdfModel.objects.all()[start:end]
                 data = gen_list(pdf_objs)
                 return result(message="获取列表", data=data)
+            elif articles_type == "2":
+                pass
             else:
                 user_no = get_token(request).get("no", "")
                 pdf_objs = PdfModel.objects.filter(user=User.objects.get(no=user_no))
