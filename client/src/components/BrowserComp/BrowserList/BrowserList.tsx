@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import "./BrowserList.less";
 
 
+
 // 表头
 const columnsInit = [
    {
@@ -31,7 +32,7 @@ const columnsInit = [
       title: '标题',
       dataIndex: 'title',
       render(title: string, record: any, index: number) {
-         return <a target="_blank" href={`pdfs/${record.pdfPath}`}>{title}</a>
+         return <a target="_blank" href={`api/v1/file?fileType=pdf&filePath=${record.pdfPath}`}>{title}</a>
       },
       // width: "30%"
    },
