@@ -3,7 +3,7 @@ import { Button, message, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { setActiveMenu, setMenuQueue } from '../../features/menuSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import MyArticle from '../ArticleComp/MyMyArticle';
+import MyArticle from '../MyMyArticle/MyMyArticle';
 import { MenuType } from '../MenuComp/MenuComp';
 import menuNameMap from '../MenuNameMap';
 import "./ContentContainer.less";

@@ -1,7 +1,10 @@
 import React from 'react';
+import BrowserComp from '../BrowserComp/BrowserComp';
 
 function MyCollection() {
-  return <div>我的收藏</div>;
+  return <div>
+    <BrowserComp />
+  </div>;
 }
 
 export default MyCollection;

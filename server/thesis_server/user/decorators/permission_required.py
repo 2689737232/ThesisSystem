@@ -13,11 +13,11 @@ from util.result import result, MyCode
 def permission_required(level):
     def decorator(func):
         def _wrapped_view(self, request, *args, **kwargs):
-            print(self, request)
             # 判断请求信息中的token
             # 添加到django.views中方法的装饰器
             if isinstance(self, View):
                 token = request.META.get('HTTP_AUTHORIZATION')
+                print("获取token", token)
                 try:
                     dict = jwt.decode(
                         token, SECRET_KEY, algorithms=['HS256']
@@ -32,6 +32,7 @@ def permission_required(level):
                 except jwt.InvalidTokenError:
                     return result(code=401, message="无效的token")
                 except Exception as e:
-                    result(code=401, message=e)
+                    print("请求错误", e)
+                    return result(code=401, message="服务器异常")
         return _wrapped_view
     return decorator

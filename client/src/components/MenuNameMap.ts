@@ -2,11 +2,12 @@
 // 配置主页菜单名对应的图标、每个菜单应用对应的子组件
 import { FolderOpenOutlined, SolutionOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import AddUser from './AddUser/AddUser';
-import MyArticle from './ArticleComp/MyMyArticle';
+import MyArticle from './MyMyArticle/MyMyArticle';
 import BrowserComp from './BrowserComp/BrowserComp';
 import ImportComp from './ImportComp/ImportComp';
 import Permission from './Permission/Permission';
 import MyCollection from './MyCollection/MyCollection';
+import ViewAll from './ViewAll/ViewAll';
 
 const menuNameMap: { [key: string]: any } = {
    "我的文献": {
@@ -15,24 +16,24 @@ const menuNameMap: { [key: string]: any } = {
    },
    "浏览": {
       Icon: VideoCameraOutlined,
-      SubComp: BrowserComp
+      SubComp: ViewAll
    },
    "收藏": {
       Icon: FolderOpenOutlined,
-      SubComp: MyCollection
+      SubComp: MyCollection,
    },
-   "添加用户": {
-      Icon: UserOutlined,
-      SubComp: AddUser
-   },
+   // "添加用户": {
+   //    Icon: UserOutlined,
+   //    SubComp: AddUser
+   // },
    "导入": {
       Icon: SolutionOutlined,
       SubComp: ImportComp
    },
-   "权限修改": {
-      Icon: UserOutlined,
-      SubComp: Permission
-   }
+   // "权限修改": {
+   //    Icon: UserOutlined,
+   //    SubComp: Permission
+   // }
 }
 
 export default menuNameMap

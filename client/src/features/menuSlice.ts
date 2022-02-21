@@ -21,7 +21,6 @@ export const menuSlice = createSlice({
    reducers: {
       setActiveMenu(state, action: PayloadAction<MenuType | null | undefined>) {
          state.active = action.payload
-         console.log(action.payload);
       },
       setActiveIndex(state, action: PayloadAction<number>) {
          state.activeIndex = action.payload;
