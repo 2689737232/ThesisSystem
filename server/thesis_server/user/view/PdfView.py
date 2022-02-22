@@ -122,12 +122,17 @@ class PdfCollections(APIView):
         if pdf_id is None:
             return result(message="参数pdfId不能为空", code=MyCode.paramserror)
         else:
-            UserPdfs(
-                user=User.objects.filter(no=user_no).first(),
-                pdf=PdfModel.objects.filter(id=pdf_id).first()
-            ).save()
-            return result(message="添加收藏成功")
-
+            # 判断如果数据库中有收藏需要取消收藏、否则添加
+            db_user_pdf = UserPdfs.objects.filter(user__no=user_no, pdf__id=pdf_id).first()
+            if db_user_pdf is None:
+                UserPdfs(
+                    user=User.objects.filter(no=user_no).first(),
+                    pdf=PdfModel.objects.filter(id=pdf_id).first()
+                ).save()
+                return result(message="添加收藏成功")
+            else:
+                db_user_pdf.delete()
+                return result(message="取消收藏成功")
 
 def gen_list(pdf_objs):
     pdfs = []
