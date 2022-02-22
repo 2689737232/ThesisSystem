@@ -7,6 +7,11 @@ import NotFound from './pages/NotFound'
 import ShowAntComp from './pages/ShowAntComp'
 
 function App() {
+  // useEffect(()=>{
+  //   window.onresize = function(){
+  //     console.log("浏览器大小发生了变化");
+  //   }
+  // },[])
 
   return (
     <div className="App">

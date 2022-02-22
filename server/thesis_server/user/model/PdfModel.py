@@ -16,16 +16,20 @@ def user_directory_path(instance, filename):
 
 class Pdf(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name="users_upload", related_query_name="user_collect"
+    )  # 上传用户
     author = models.CharField(max_length=100, null=True)
     year = models.CharField(max_length=10, null=True)
     pdf_title = models.CharField(max_length=128, null=False)
     periodical = models.CharField(max_length=100, null=True)
     last_modify = models.CharField(max_length=50, null=True)
     article_type = models.CharField(max_length=100, null=True)
-    score = models.IntegerField(default=5) 
+    score = models.IntegerField(default=5)
     #  path = models.FileField(upload_to="uploads/")  # 保存在项目pdfs/uploads文件夹下
     pdf = models.FileField(upload_to=user_directory_path)
+    user_collect = models.ManyToManyField(User, through="UserPdfs")
 
     @property
     def dict_props(self):
@@ -42,8 +46,13 @@ class Pdf(models.Model):
             "score": self.score,
             "pdfPath": self.pdf.name
         }
-    
 
+
+class UserPdfs(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name="users_collect",
+                             related_query_name="user_collect")
+    pdf = models.ForeignKey(Pdf, on_delete=models.CASCADE)
 
 
 # 表示从模型中创建一个表单

@@ -1,7 +1,7 @@
-from datetime import date
+from cmath import e
 from email import errors
+from http.cookies import CookieError
 
-from pymysql import Date
 from .Token import get_token
 from util.result import result, MyCode
 from rest_framework.views import APIView
@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
+from user.model.PdfModel import UserPdfs
 
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
@@ -58,7 +59,8 @@ class Pdf(APIView):
             # 1我的文献 2为所有  3为我的收藏
             if articles_type == "1":
                 user_no = get_token(request).get("no", "")
-                pdf_objs = PdfModel.objects.filter(user=User.objects.get(no=user_no))[start:end]
+                pdf_objs = PdfModel.objects.filter(
+                    user=User.objects.get(no=user_no))[start:end]
                 data = gen_list(pdf_objs)
                 return result(message="获取列表", data=data)
             elif articles_type == "2":
@@ -68,21 +70,23 @@ class Pdf(APIView):
             else:
                 pass
 
-
 # 获取页面总数
+
+
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class PdfPages(APIView):
     @permission_required(2)
     def get(self, request, *args, **kwords):
         # 请求文章类型  1为所有文章  2为我的文章 3为我的收藏
         articles_type = request.query_params.get("articlesType", "-1")
-        
+
         if articles_type == "-1":
             return result(message="请求参数错误", code=MyCode.paramserror)
         elif articles_type == "1":
             user_no = get_token(request).get("no", "")
-            pdf_count = PdfModel.objects.filter(user=User.objects.get(no=user_no)).count()
-           
+            pdf_count = PdfModel.objects.filter(
+                user=User.objects.get(no=user_no)).count()
+
             print("获得页数", pdf_count)
             data = {
                 "count": pdf_count
@@ -96,6 +100,34 @@ class PdfPages(APIView):
             return result(message="所有文献总数", data=data)
         else:
             return result("ok")
+
+# 收藏页面
+
+
+@method_decorator(decorator=[csrf_exempt], name="dispatch")
+class PdfCollections(APIView):
+    @permission_required(2)
+    def get(self, request, *args, **kwords):
+        user_no = get_token(request).get("no", "")
+        if user_no is None:
+            return result(message="参数no为空", code=MyCode.paramserror)
+        else:
+            user_pdfs = PdfModel.objects.filter(user_collect__no=user_no)
+            return result(message="用户收藏信息", data=gen_list(user_pdfs))
+
+    @permission_required(2)
+    def post(self, request, *args, **kwords):
+        user_no = get_token(request).get("no", "")
+        pdf_id = request.POST.get("pdfId", "")
+        if pdf_id is None:
+            return result(message="参数pdfId不能为空", code=MyCode.paramserror)
+        else:
+            UserPdfs(
+                user=User.objects.filter(no=user_no).first(),
+                pdf=PdfModel.objects.filter(id=pdf_id).first()
+            ).save()
+            return result(message="添加收藏成功")
+
 
 def gen_list(pdf_objs):
     pdfs = []

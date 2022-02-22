@@ -15,8 +15,7 @@ from util.result import result, MyCode
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class FileView(APIView):
 
-    permission_required(2)  # 文件访问仅对注册用户开放
-
+    # @permission_required(2)  # 文件访问仅对注册用户开放  
     def get(self, request, *args, **kwords):
         file_type = request.query_params.get("fileType")
         file_path = request.query_params.get("filePath")

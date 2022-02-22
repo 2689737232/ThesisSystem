@@ -17,7 +17,7 @@ def permission_required(level):
             # 添加到django.views中方法的装饰器
             if isinstance(self, View):
                 token = request.META.get('HTTP_AUTHORIZATION')
-                print("获取token", token)
+                # print("获取token", token)
                 try:
                     dict = jwt.decode(
                         token, SECRET_KEY, algorithms=['HS256']
