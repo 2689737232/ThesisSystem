@@ -24,7 +24,7 @@ class Function(APIView):
 
 
 def gen_init_function():
-    FunctionModel.objects.filter().delete()
+    FunctionModel.objects.all().delete()
     for menu_name, functions in menu_function_dict.items():
         menu_code = menu_code_dict[menu_name]
         menu = Menu.objects.filter(code=menu_code).first()

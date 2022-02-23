@@ -4,7 +4,8 @@ import json
 from util.result import result
 from user.decorators.permission_required import permission_required
 from user.setting import SECRET_KEY
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 def get_token(request):
     token = request.META.get('HTTP_AUTHORIZATION')
@@ -13,7 +14,7 @@ def get_token(request):
     )
     return d.get('data')
 
-
+@method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Token(APIView):
     def post(self, request, *args, **kwords):
         token = request.META.get('HTTP_AUTHORIZATION')

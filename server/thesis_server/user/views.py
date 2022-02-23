@@ -144,9 +144,9 @@ def add_user_permission(user: User):
         user_menus = menu_code_dict.keys()
         user_function = function_code_dict.keys()
     elif user.role == 2:  # 教师
-        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户", "收藏"]
+        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户", "收藏", "权限管理"]
         user_function = ["浏览我的文档", "删除我的文档",
-                         "修改自己文档", "浏览其他文献", "添加学生", "导入文档", "读取收藏", "删除收藏", "添加收藏"]
+                         "修改自己文档", "浏览其他文献", "添加学生", "导入文档", "读取收藏", "删除收藏", "添加收藏", "进入权限管理"]
     elif user.role == 3:  # 学生
         user_menus = ["我的文献", "浏览", "回收站", "导入", "收藏"]
         user_function = ["浏览我的文档", "删除我的文档", "修改自己文档",
@@ -183,9 +183,15 @@ def userExist(user_no: str):
         return True
 
 
+
 # 初始化用户的所有权限
 def init_user_permission(user):
     UserMenus.objects.filter(user=user).delete()
     UserFunctions.objects.filter(user=user).delete()
     add_user_permission(user=user)
-    
+
+def init_all_permission():
+    print("输出了")
+    users = MyUser.objects.all()
+    for user in users:
+        init_user_permission(user)

@@ -32,7 +32,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "localhost:8000",
-    "loaclhot:3001"
+    "loaclhot:3000"
 ]
 
 # REST_FRAMEWORK 

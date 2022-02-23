@@ -47,7 +47,7 @@ class Menu(APIView):
 
 # 根据模型中的menu_code_dict初始化菜单数据
 def gen_init_menu():
-    MenuModel.objects.filter().delete()
+    MenuModel.objects.all().delete()
     menu_list = menu_code_dict.keys()
     gen_list = [MenuModel(name=menu, code=menu_code_dict[menu])
                 for menu in menu_list]
