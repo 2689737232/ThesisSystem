@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Menu } from 'antd';
+import { Menu, message } from 'antd';
 import { CopyOutlined, SolutionOutlined, UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
 import "./MenuComp.less"
 import { getMenuList } from '@/api/menu';
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks"
-import { pushMenuQueue, setActiveMenu, setMenuQueue } from '@/features/menuSlice';
+import { pushMenuQueue, setActiveMenu, setMenuQueue, setSearchMenuItem } from '@/features/menuSlice';
 import menuNameMap from '../MenuNameMap';
 
 
@@ -27,21 +27,22 @@ function MenuComp(props: MenuComp) {
             if (menuData) {
                 const data = menuData.data.data
                 const code = menuData.data.code
+                if (!data || data.length === 0) {
+                    message.error("获取菜单列表失败！")
+                    return false
+                }
                 if (code === 200) {
                     setMenuList(data.menus)
                     // 初始化，进入主页默认展示第一项
                     dispatch(setMenuQueue([data.menus[0]]))
                     dispatch(setActiveMenu(data.menus[0]))
+                    dispatch(setSearchMenuItem((data.menus as MenuType[]).find(item => item.name === "搜索")))
                 }
             }
         }
 
         inner()
     }, [])
-
-
-    // 重新激活菜单后，重设当前激活的idnex
-    const activeIndex = getActiveIndex()
 
     function getActiveIndex() {
         for (let i = 0; i < menuList.length; i++) {
@@ -52,6 +53,8 @@ function MenuComp(props: MenuComp) {
 
         return String(menuList[0]?.id)
     }
+    // 重新激活菜单后，重设当前激活的idnex
+    const activeIndex = getActiveIndex()
 
     function handleClick(menu: MenuType) {
         dispatch(pushMenuQueue(menu))

@@ -5,13 +5,24 @@ import { SelectionItemSelectFn, TableRowSelection } from 'antd/lib/table/interfa
 import React, { Key, useEffect, useState } from 'react'
 import "./BrowserList.less";
 
+
+function TitleComp(props: { pdfPath: string, title: string, record: any }) {
+   function viewArticle() {
+      const articleId = props.record.id;
+   }
+
+   return (
+      <a onClick={viewArticle} target="_blank" href={`api/v1/file?fileType=pdf&filePath=${props.pdfPath}`}>{props.title}</a>
+   )
+}
+
 // 表头
 const columnsInit = [
    // {
    //    title: '收藏',
    //    dataIndex: 'collection',
-   //    // render: () => <Checkbox />,
-   //    // width: '7%',
+   // render: () => <Checkbox />,
+   // width: '7%',
    // },
    {
       title: '作者',
@@ -32,7 +43,7 @@ const columnsInit = [
       title: '标题',
       dataIndex: 'title',
       render(title: string, record: any, index: number) {
-         return <a target="_blank" href={`api/v1/file?fileType=pdf&filePath=${record.pdfPath}`}>{title}</a>
+         return <TitleComp pdfPath={record.pdfPath} title={title} record={record} />
       },
       // width: "15%"
    },
@@ -56,7 +67,8 @@ const columnsInit = [
 type BrowserList = {
    [key: string]: any
    showCollection?: boolean,
-   browserType: ArticlesType  // 我的、浏览、收藏
+   browserType: ArticlesType,  // 我的、浏览、收藏
+   keyWords?: string  // 搜索关键字
 }
 
 function BrowserList(props: BrowserList) {
@@ -64,7 +76,8 @@ function BrowserList(props: BrowserList) {
    const [data, setData] = useState([]);
    const [pagination, setPagination] = useState({
       current: 1,
-      pageSize: 7,
+      pageSize: 10,
+      showSizeChanger: false
    })
    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
    const [loading, setLoading] = useState(true)
@@ -76,11 +89,11 @@ function BrowserList(props: BrowserList) {
    const rowSelection: TableRowSelection<React.Key[]> = {
       selectedRowKeys,
       onChange: onSelectChange,
-      onSelect: function (record:{[key:string]:any}, selected, selectedRows, nativeEvent) {
+      onSelect: function (record: { [key: string]: any }, selected, selectedRows, nativeEvent) {
          // 发送网络请求更新收藏列表
          if (selected) {
             const articleId = record.id;
-            
+
          } else {
 
          }
@@ -113,6 +126,7 @@ function BrowserList(props: BrowserList) {
       setLoading(false)
    };
 
+   
    useEffect(() => {
       if (!props.showCollection) {
          setColumns(pre => pre.filter(item => item.title !== "收藏"))
@@ -121,25 +135,41 @@ function BrowserList(props: BrowserList) {
       setArticlesCount()
    }, [])
 
+   useEffect(() => {
+      console.log(props.browserType, props.keyWords);
+      
+      if(props.keyWords !== "" && props.browserType === 4){
+         console.log("key变量");
+         renderArticles(pagination.current, pagination.pageSize)
+      }
+   }, [props.keyWords])
+
    // 渲染页面
    async function renderArticles(page: number, size: number) {
-      // 拉取数据
-      const response = await getArticles({
+      const baseRequestConf: RequestArticleParams = {
          articlesType: props.browserType,
          page: page,
          size: size
-      }, (err: any) => {
+      }
+      if (props.browserType === 4) {
+         baseRequestConf.keyWords = props.keyWords
+      }
+      // 拉取数据
+      const response = await getArticles(baseRequestConf, (err: any) => {
+         message.error("请求文章数据失败，请刷新页面重试")
          setLoading(false)
       })
 
       if (response.data.data) {
          console.log(response.data.data.articles);
          setData(response.data.data.articles)
+         setLoading(false)
          return true
       } else {
+         message.info("没有文章数据哦！")
+         setLoading(false)
          return false
       }
-      setLoading(false)
    }
    // 获取文章总数
    async function setArticlesCount() {
@@ -175,6 +205,7 @@ function BrowserList(props: BrowserList) {
             loading={loading}
             onChange={handleTableChange}
          />
+         <div className="space"></div>
       </div>
    )
 }

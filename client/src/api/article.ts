@@ -4,26 +4,25 @@
  * @Date: 2022-02-18 13:47:43
  */
 
+import { message } from "antd";
 import { request } from "./base"
 
-export type ArticlesType = 1 | 2 | 3;
+// 1为我的，2为所有,3为收藏,4为搜索，5为推荐
+export type ArticlesType = 1 | 2 | 3 | 4 | 5;
 
 export type RequestArticleParams = {
    [key: string]: any;
-   articlesType: ArticlesType;   // 1为我的，2为所有,3为收藏
+   articlesType: ArticlesType;
    page: number;  // 第几页
    size: number;  // 一页多少条数据
+   keyWords?: string
 }
 
 export async function getArticles(params: RequestArticleParams, errorCB?: Function) {
-   const result = request.get("/user/pdf", {
-      params: {
-         articlesType: params.articlesType,
-         page: params.page,
-         size: params.size
-      }
+   let result = request.get("/user/pdf", {
+      params
    })
-   result.then((err) => {
+   result.catch((err) => {
       if (errorCB) errorCB(err)
    })
    return await result
@@ -35,6 +34,21 @@ export async function getArticlesCount(articlesType: ArticlesType) {
    return await request.get("/user/pdfpages", {
       params: {
          articlesType: articlesType
+      }
+   })
+}
+
+// 收藏文章
+export async function viewArticle(articleId: number) {
+
+}
+
+
+// 搜索文章
+export async function searchArticle(keyWords: string) {
+   return await request.get("/user/search", {
+      params: {
+         keyWords
       }
    })
 }

@@ -3,7 +3,7 @@ from . import views
 from .view.Menu import Menu
 from .view.Function import Function
 from .view.Token import Token
-from .view.PdfView import Pdf, PdfPages,PdfCollections
+from .view.PdfView import Pdf, PdfPages, PdfCollections, Search
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
     path("auth", views.AuthView.as_view(), name="auth"),
@@ -12,5 +12,6 @@ urlpatterns = [
     path("pdf", Pdf.as_view(), name="pdf"),
     path("pdfpages", PdfPages.as_view(), name="pdfpage"),
     path("pdfcollections", PdfCollections.as_view(), name="pdfcollections"),
-    path("token", Token.as_view(), name="token")
+    path("token", Token.as_view(), name="token"),
+    path("search", Search.as_view(), name="search_pdf")
 ]

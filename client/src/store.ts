@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import importPdfSlice from './features/importPdfSlice'
 import menuReducer from "./features/menuSlice"
+import searchSlice from './features/searchSlice'
 
 const store = configureStore({
    reducer: {
       menu: menuReducer,
-      importPdf: importPdfSlice
+      importPdf: importPdfSlice,
+      search: searchSlice
    }
 })
 export default store

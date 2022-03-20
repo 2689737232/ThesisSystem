@@ -4,6 +4,10 @@ import "./TopBar.less"
 import { logOut } from '@/util/user';
 const { Search } = Input;
 import { useNavigate } from "react-router";
+import { pushMenuQueue, setActiveMenu } from '@/features/menuSlice';
+import { useAppSelector } from '@/hooks/reduxHooks';
+import { useDispatch } from 'react-redux';
+import { setkeyWords } from '@/features/searchSlice';
 
 type TopBarProps = {
    userName: string
@@ -11,15 +15,26 @@ type TopBarProps = {
 
 function TopBar(props: TopBarProps) {
    const navigate = useNavigate()
+   const menuList = useAppSelector(state => state.menu.value)
+   const searchMenuItem = useAppSelector(state => state.menu.searcgMenuItem)
+   const dispatch = useDispatch()
 
-   function onSearch() {
-      console.log("搜索中");
+   function onSearch(keyWords: string) {
+      if(!keyWords  || keyWords === ""){
+         message.error("搜索关键字不能为空")
+         return false
+      }
+      if (searchMenuItem) {
+         dispatch(setActiveMenu(searchMenuItem))
+         dispatch(pushMenuQueue(searchMenuItem))
+         dispatch(setkeyWords(keyWords))
+      } else {
+         message.error("菜单组件渲染失败！请重新刷新或登录后，再尝试。")
+      }
    }
 
    function confirm() {
       if (logOut()) {
-         
-
          message.success('退出成功');
          navigate("/login");
       }
@@ -52,3 +67,4 @@ function TopBar(props: TopBarProps) {
 }
 
 export default TopBar;
+

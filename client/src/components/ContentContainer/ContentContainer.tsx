@@ -46,7 +46,7 @@ function ContentContainer() {
 
    function onChange(activeKey: string) {
       if (activeKey !== "unselected") {
-         setActiveKey(activeKey)
+         // setActiveKey(activeKey)
          dispatch(setActiveMenu(menuList.find(menu => menu.code === activeKey)))
       }
    }

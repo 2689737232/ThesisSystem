@@ -32,10 +32,16 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "localhost:8000",
-    "loaclhot:3000"
+    "http://localhost:3000"
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000"
+]
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000"
 ]
 
-# REST_FRAMEWORK 
+# REST_FRAMEWORK
 # 分页配置
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -51,11 +57,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',  # 配置静态文件
-    
+
     'user.apps.UserConfig',
     'test_l.apps.TestLConfig',
     'home.apps.HomeConfig',
-    'rest_framework' # 添加rest_framework
+    'rest_framework'  # 添加rest_framework
 ]
 
 MIDDLEWARE = [
@@ -106,7 +112,7 @@ DATABASES = {
     }
 }
 
-# 上传文件的保存路径 
+# 上传文件的保存路径
 MEDIA_ROOT = BASE_DIR.joinpath("pdfs")
 MEDIA_URL = "/pdfs/"  # 表示以这个请求开始的是加载pdfs资源
 

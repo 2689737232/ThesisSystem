@@ -3,19 +3,35 @@
 .browser-list-container {
    .bbox;
    overflow: hidden;
-   height       : 80vh;
+   height  : 80vh;
    overflow: scroll;
-   padding      : 0 0.5rem;
-   width        : 100%;
+   padding : 0 0.5rem;
+   width   : 100%;
    // width: max-content;
-   
 
    .browser-table {
-      width     : 100%;
-      height    : 100%;
+      width : 100%;
+      height: 100%;
+   }
+
+   .space{
+      width: 100%;
+      height: 3rem;
    }
 }
 
-.ant-table-content,.ant-table-container,.ant-table{
+.ant-table-pagination {
+   position: fixed;
+   bottom  : 1rem;
+   right   : 5rem;
+}
+
+.ant-table-tbody {
+   padding-bottom: 10rem;
+}
+
+.ant-table-content,
+.ant-table-container,
+.ant-table {
    width: auto;
 }

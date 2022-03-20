@@ -40,11 +40,6 @@ function ImportComp() {
         uploading: false,
         showUploadList: false,
         beforeUpload: (file: RcFile) => { // 返回false，实现手动上传
-            // if (!interruptFlag) {
-
-            // } else {
-            //     message.error("不能添加新文件，正在上传中")
-            // }
             const isPDF = file.type === 'application/pdf';
             if (isPDF) {
                 setPdfFiles(state => [...state, { file, id: id.genId(file.name) }])

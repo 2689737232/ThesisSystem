@@ -10,7 +10,6 @@
 ### 后端
 
 - django
-- django-rest-framework 
 - elasticsearch 
 - mysql
 
