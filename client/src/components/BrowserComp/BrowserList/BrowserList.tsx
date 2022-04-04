@@ -1,18 +1,18 @@
-import { ArticlesType, getArticles, getArticlesCount, RequestArticleParams } from '@/api/article';
-import { Checkbox, message, Table, TablePaginationConfig } from 'antd';
-import { INTERNAL_SELECTION_ITEM } from 'antd/lib/table/hooks/useSelection';
-import { SelectionItemSelectFn, TableRowSelection } from 'antd/lib/table/interface';
+import { ArticlesType, getArticles, getArticlesCount, RequestArticleParams, viewArticle } from '@/api/article';
+import { message, Table, TablePaginationConfig } from 'antd';
+import { TableRowSelection } from 'antd/lib/table/interface';
 import React, { Key, useEffect, useState } from 'react'
 import "./BrowserList.less";
 
 
 function TitleComp(props: { pdfPath: string, title: string, record: any }) {
-   function viewArticle() {
+   async function sendArticleId() {
       const articleId = props.record.id;
+      const result = await viewArticle(articleId)
    }
 
    return (
-      <a onClick={viewArticle} target="_blank" href={`api/v1/file?fileType=pdf&filePath=${props.pdfPath}`}>{props.title}</a>
+      <a onClick={sendArticleId} target="_blank" href={`api/v1/file?fileType=pdf&filePath=${props.pdfPath}`}>{props.title}</a>
    )
 }
 
@@ -28,7 +28,6 @@ const columnsInit = [
       title: '作者',
       dataIndex: 'author',
       render: (author: string) => author ? author : "(空)",
-      width: '10%',
    },
    {
       title: '年份',
@@ -37,7 +36,6 @@ const columnsInit = [
       //    { text: 'Male', value: 'male' },
       //    { text: 'Female', value: 'female' },
       // ],
-      // width: '10%',
    },
    {
       title: '标题',
@@ -45,22 +43,18 @@ const columnsInit = [
       render(title: string, record: any, index: number) {
          return <TitleComp pdfPath={record.pdfPath} title={title} record={record} />
       },
-      // width: "15%"
    },
    {
       title: '评分',
       dataIndex: 'score',
-      // width: "10%"
    },
    {
       title: '最后更新',
       dataIndex: 'lastModify',
-      // width: "10%"
    },
    {
       title: '文献类型',
       dataIndex: 'articleType',
-      // width: "10%"
    },
 ];
 
@@ -93,9 +87,7 @@ function BrowserList(props: BrowserList) {
          // 发送网络请求更新收藏列表
          if (selected) {
             const articleId = record.id;
-
          } else {
-
          }
          console.log(record, selected, selectedRows, nativeEvent);
       },
@@ -126,7 +118,7 @@ function BrowserList(props: BrowserList) {
       setLoading(false)
    };
 
-   
+
    useEffect(() => {
       if (!props.showCollection) {
          setColumns(pre => pre.filter(item => item.title !== "收藏"))
@@ -137,8 +129,8 @@ function BrowserList(props: BrowserList) {
 
    useEffect(() => {
       console.log(props.browserType, props.keyWords);
-      
-      if(props.keyWords !== "" && props.browserType === 4){
+
+      if (props.keyWords !== "" && props.browserType === 4) {
          console.log("key变量");
          renderArticles(pagination.current, pagination.pageSize)
       }

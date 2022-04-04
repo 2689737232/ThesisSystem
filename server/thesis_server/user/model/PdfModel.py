@@ -1,4 +1,3 @@
-from statistics import mode
 from django.db import models
 from user.models import User
 from django.forms import ModelForm
@@ -29,7 +28,8 @@ class Pdf(models.Model):
     score = models.IntegerField(default=5)
     #  path = models.FileField(upload_to="uploads/")  # 保存在项目pdfs/uploads文件夹下
     pdf = models.FileField(upload_to=user_directory_path)
-    user_collect = models.ManyToManyField(User, through="UserPdfs")
+    # 用户浏览历史
+    user_history = models.ManyToManyField(User, through="UserHistory")
 
     @property
     def dict_props(self):
@@ -47,8 +47,13 @@ class Pdf(models.Model):
             "pdfPath": self.pdf.name
         }
 
+class UserHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name="user_history",
+                             related_query_name="user_history")
+    pdf = models.ForeignKey(Pdf, on_delete=models.CASCADE)
 
-class UserPdfs(models.Model):
+class UserCollectPdfs(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,
                              related_name="users_collect",
                              related_query_name="user_collect")

@@ -38,9 +38,15 @@ export async function getArticlesCount(articlesType: ArticlesType) {
    })
 }
 
-// 收藏文章
-export async function viewArticle(articleId: number) {
-
+// 浏览文章
+export async function viewArticle(articleId: string) {
+   const fomrData = new FormData()
+   fomrData.append("pdfId", articleId)
+   return await request.post("/user/history", fomrData, {
+      headers: {
+         'content-type': 'application/x-www-form-urlencoded'
+      }
+   })
 }
 
 

@@ -180,9 +180,8 @@ def set_user_menu_function(user_menus, user_functions, user):
             state = 2
         UserFunctions(user=user, function=function, state=state).save()
 
+
 # 判断用户是否存在
-
-
 def userExist(user_no: str):
     user = MyUser.objects.filter(no=user_no).first()
     if user is None:
@@ -208,4 +207,3 @@ def init_all_permission(is_init_menu_function):
     for user in users:
         init_user_permission(user)
     return "重置用户权限成功"
-

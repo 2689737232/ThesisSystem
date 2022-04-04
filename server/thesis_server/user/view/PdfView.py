@@ -1,3 +1,4 @@
+from atexit import unregister
 from cmath import e
 import code
 from email import errors
@@ -11,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
-from user.model.PdfModel import UserPdfs
+from user.model.PdfModel import UserCollectPdfs, UserHistory
 
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
@@ -52,11 +53,12 @@ class Pdf(APIView):
         page = int(request.query_params.get("page", 0))   # 第几页,默认第一页
         size = int(request.query_params.get("size", 10))   # 一页几条数据，默认10条
 
-        if articles_type == "-1": return result(message="请求参数错误", code=MyCode.paramserror)
-      
+        if articles_type == "-1":
+            return result(message="请求参数错误", code=MyCode.paramserror)
+
         start = page * size
         end = (page+1) * size
-        
+
         if articles_type == "1":
             user_no = get_token(request).get("no", "")
             pdf_objs = PdfModel.objects.filter(
@@ -132,10 +134,10 @@ class PdfCollections(APIView):
             return result(message="参数pdfId不能为空", code=MyCode.paramserror)
         else:
             # 判断如果数据库中有收藏需要取消收藏、否则添加
-            db_user_pdf = UserPdfs.objects.filter(
+            db_user_pdf = UserCollectPdfs.objects.filter(
                 user__no=user_no, pdf__id=pdf_id).first()
             if db_user_pdf is None:
-                UserPdfs(
+                UserCollectPdfs(
                     user=User.objects.filter(no=user_no).first(),
                     pdf=PdfModel.objects.filter(id=pdf_id).first()
                 ).save()
@@ -155,14 +157,44 @@ def gen_list(pdf_objs):
     return data
 
 
+# 浏览历史
+@method_decorator(decorator=[csrf_exempt], name="dispatch")
+class PdfHistory(APIView):
+    def get(self, request, *args, **kwords):
+        user_no = get_token(request).get("no", "")
+        pdf_list = PdfModel.objects.filter(
+            user_history=User.objects.get(no=user_no)
+        )
+        return result(message="用户浏览信息", data=gen_list(pdf_list))
+
+    def post(self, request, *args, **kwords):
+        pdf_id = request.POST.get("pdfId", "")
+        user_no = get_token(request).get("no", "")
+        if pdf_id == "":
+            return result(message="参数pdfId不能为空", code=MyCode.paramserror)
+        else:
+            # 判断是否有该记录的浏览历史
+            db_user_pdf = UserHistory.objects.filter(
+                user_id=user_no, pdf_id=pdf_id).first()
+            if db_user_pdf is None:
+                UserHistory(
+                    user=User.objects.filter(no=user_no).first(),
+                    pdf=PdfModel.objects.filter(id=pdf_id).first()
+                ).save()
+                return result(message="添加浏览记录成功,pdf: " + pdf_id)
+            else:
+                return result(message="已浏览该文章")
+
 # 搜索文章
+
+
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Search(APIView):
     def get(self, request, *args, **kwords):
         key_words = request.query_params.get("keyWords", "")
         if key_words == "":
             return result(code=MyCode.paramserror, message="搜索关键字不能为空")
-        
+
         return result(code=200, message="ok", data={"key_words": key_words})
 
     def post(self, request, *args, **kwords):

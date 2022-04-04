@@ -1,9 +1,4 @@
 from datetime import datetime, timedelta
-from math import fabs
-from operator import mod
-from random import choice
-
-from django.template import engine
 from .setting import SECRET_KEY
 from django.db import models
 import jwt
