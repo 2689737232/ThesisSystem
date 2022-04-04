@@ -397,14 +397,100 @@ PUT blog/_doc/1
 {
   "title": "定义分词器"
 }
-如果没有使用分词器，在查看词条向量的时候。
+如果没有使用分词器，在查看词条向量的时候,会将`定义分词器`中文一个字一个字的分开。
 GET blog/_termvectors/1
 {
-  "filed"
+  "fields": ["title"]
+}
+```
+
+自定义分词器，
+```js
+PUT blog
+{
+  "mappings":{
+    "propertis": {
+      "title": {
+        "type": "text",
+        "analyzer": "ik_smart"
+      }
+    }
+  }
+}
+```
+
+- search_analyzer
+再查询时，如果输入的是一句话，对这句话该使用的分词器。如果没有配，会使用analyzer。  
+```js
+# 关键词查询
+GET blog/_search
+{
+  "query": {
+    "term": {
+      "title": {
+        "value": "定义一个分词器"
+      }
+    }
+  }
+}
+# 全文查询
+GET blog/_search
+{
+  "query": {
+    "match": {
+      "title": "定义一个分词器"
+    }
+  }
+}
+```  
+- normalizer
+如对大小写的查询,配置之后可同时查询出大小写。
+```js
+PUT blog
+{
+  "settings": {
+    "analysis": {
+      "normalizer": {
+        "my": {
+          "type": "custom",
+          "filter": ["lowercase"]
+        }
+      }
+    }
+  },
+  "mappings": {
+      "properties": {
+        "author": {
+          "type": "keyword",
+          "normalizer": "my"
+        }
+    }
+  }
+}
+
+PUT blog/_doc/1
+{
+  "author": "javascript"
+}
+
+PUT blog/_doc/2
+{
+  "author": "JAVASCRIPT"
+}
+
+GET blog/_search
+{
+  "query": {
+    "term": {
+      "author": "javascript"
+    }
+  }
 }
 ```
 
 
+### python 中使用
+https://www.cnblogs.com/loveyouyou616/p/11573080.html
 
 ## 2.django
 

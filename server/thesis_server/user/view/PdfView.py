@@ -186,8 +186,6 @@ class PdfHistory(APIView):
                 return result(message="已浏览该文章")
 
 # 搜索文章
-
-
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Search(APIView):
     def get(self, request, *args, **kwords):
