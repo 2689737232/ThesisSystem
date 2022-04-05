@@ -3,6 +3,9 @@ from cmath import e
 import code
 from email import errors
 from http.cookies import CookieError
+import imp
+from msilib.schema import Error
+from user.elasticsearch import upload_to_elasticsearch
 
 from .Token import get_token
 from util.result import result, MyCode
@@ -13,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
 from user.model.PdfModel import UserCollectPdfs, UserHistory
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
@@ -28,7 +32,8 @@ class Pdf(APIView):
         last_modify = request.POST['last_modify']
         article_type = request.POST['article_type']
 
-        pdf = request.FILES['pdf']
+        pdf: InMemoryUploadedFile = request.FILES['pdf']
+
         if user_id is not None:
             user = User.objects.filter(no=user_id).first()
             try:
@@ -42,7 +47,13 @@ class Pdf(APIView):
                     article_type=article_type,
                     pdf=pdf
                 )
-            except errors as e:
+
+                upload_to_elasticsearch(
+                    user_id=pdf_model.user_id,
+                    pdf_id=pdf_model.id,
+                    pdf=pdf.file.getvalue()
+                )
+            except Error as e:
                 return result(message="上传失败", code=MyCode.servererror)
         return result(message="上传成功", data=pdf_title)
 
@@ -56,8 +67,8 @@ class Pdf(APIView):
         if articles_type == "-1":
             return result(message="请求参数错误", code=MyCode.paramserror)
 
-        start = page * size
-        end = (page+1) * size
+        start = (page-1) * size
+        end = page * size
 
         if articles_type == "1":
             user_no = get_token(request).get("no", "")
@@ -78,10 +89,6 @@ class Pdf(APIView):
             return result(code=200, message="ok")
         else:
             return result(code=MyCode.paramserror, message="请求参数【articles_type】类型错误")
-
-
-def upload_2_elastic(pdf):
-    print(pdf)
 
 
 # 获取页面总数
@@ -186,6 +193,8 @@ class PdfHistory(APIView):
                 return result(message="已浏览该文章")
 
 # 搜索文章
+
+
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Search(APIView):
     def get(self, request, *args, **kwords):
