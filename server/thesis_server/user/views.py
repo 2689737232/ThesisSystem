@@ -147,10 +147,10 @@ def add_user_permission(user: User):
         user_menus = menu_code_dict.keys()
         user_function = function_code_dict.keys()
     elif user.role == 2:  # 教师
-        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户", "收藏", "权限管理", "搜索"]
+        user_menus = ["我的文献", "浏览", "回收站", "导入", "添加用户", "收藏",  "搜索", "推荐"]
         user_function = ["浏览我的文档", "删除我的文档",
                          "修改自己文档", "浏览其他文献", "添加学生", "导入文档", "读取收藏",
-                         "删除收藏", "添加收藏", "进入权限管理", "搜索"]
+                         "删除收藏", "添加收藏",  "搜索", "推荐"]
     elif user.role == 3:  # 学生
         user_menus = ["我的文献", "浏览", "回收站", "导入", "收藏", "搜索"]
         user_function = ["浏览我的文档", "删除我的文档", "修改自己文档",

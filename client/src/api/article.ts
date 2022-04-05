@@ -20,7 +20,8 @@ export type RequestArticleParams = {
 
 export async function getArticles(params: RequestArticleParams, errorCB?: Function) {
    let result = null
-   if (params.articlesType === 4) {
+   if (params.articlesType === 4 || params.articlesType === 5) {
+      if(params.articlesType === 5) params.keyWords = "css"
       result = request.get("/user/search", {
          params
       })

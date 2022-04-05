@@ -68,8 +68,8 @@ class Pdf(APIView):
         if articles_type == "-1":
             return result(message="请求参数错误", code=MyCode.paramserror)
 
-        start = (page-1) * size
-        end = page * size
+        start = page * size
+        end = (page + 1) * size
 
         if articles_type == "1":
             user_no = get_token(request).get("no", "")
@@ -206,6 +206,16 @@ class Search(APIView):
         pdfs = get_pdf_nodel_from_search(search_by_keyword(key_words))
         pdfs = gen_list(pdfs)
         return result(code=200, message="ok", data=pdfs)
+
+    def post(self, request, *args, **kwords):
+        pass
+
+
+# 文章推荐按
+@method_decorator(decorator=[csrf_exempt], name="dispatch")
+class Recommend(APIView):
+    def get(self, request, *args, **kwords):
+        pass
 
     def post(self, request, *args, **kwords):
         pass
