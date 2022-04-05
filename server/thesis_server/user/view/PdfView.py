@@ -17,8 +17,9 @@ from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
 from user.model.PdfModel import UserCollectPdfs, UserHistory
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from user.elasticsearch import search_by_keyword,get_pdf_nodel_from_search
 
-
+# 上传pdf，获取pdf
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Pdf(APIView):
 
@@ -192,9 +193,9 @@ class PdfHistory(APIView):
             else:
                 return result(message="已浏览该文章")
 
+
+
 # 搜索文章
-
-
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Search(APIView):
     def get(self, request, *args, **kwords):
@@ -202,7 +203,9 @@ class Search(APIView):
         if key_words == "":
             return result(code=MyCode.paramserror, message="搜索关键字不能为空")
 
-        return result(code=200, message="ok", data={"key_words": key_words})
+        pdfs = get_pdf_nodel_from_search(search_by_keyword(key_words))
+        pdfs = gen_list(pdfs)
+        return result(code=200, message="ok", data=pdfs)
 
     def post(self, request, *args, **kwords):
         pass

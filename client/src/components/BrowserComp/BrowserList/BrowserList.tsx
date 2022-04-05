@@ -128,10 +128,7 @@ function BrowserList(props: BrowserList) {
    }, [])
 
    useEffect(() => {
-      console.log(props.browserType, props.keyWords);
-
       if (props.keyWords !== "" && props.browserType === 4) {
-         console.log("key变量");
          renderArticles(pagination.current, pagination.pageSize)
       }
    }, [props.keyWords])

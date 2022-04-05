@@ -19,9 +19,16 @@ export type RequestArticleParams = {
 }
 
 export async function getArticles(params: RequestArticleParams, errorCB?: Function) {
-   let result = request.get("/user/pdf", {
-      params
-   })
+   let result = null
+   if (params.articlesType === 4) {
+      result = request.get("/user/search", {
+         params
+      })
+   } else {
+      result = request.get("/user/pdf", {
+         params
+      })
+   }
    result.catch((err) => {
       if (errorCB) errorCB(err)
    })

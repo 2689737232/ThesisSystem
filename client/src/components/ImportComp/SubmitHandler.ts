@@ -56,7 +56,7 @@ export async function fireAllEvents(callBacksObj?: FireProps): Promise<boolean> 
 
    async function _loopEvents(): Promise<any> {
       for (let i = 0; i < submitEvents.length; i++) {
-         // 判断是否中断,中断后将剩余为提交的保留
+         // 判断是否中断,中断后将剩余未提交的保留
          if (!flag) {
             flag = null;
             return false
@@ -66,7 +66,7 @@ export async function fireAllEvents(callBacksObj?: FireProps): Promise<boolean> 
          // 执行回调
          if (callBacksObj && callBacksObj.eachSubmit) callBacksObj.eachSubmit(result, item, i)
 
-         // 在循环中，如果清楚了一项，i需要减1
+         // 在循环中，如果清除了一项，i需要减1
          if (clearIndex !== -1) {
             clearIndex = -1
             return _loopEvents()
