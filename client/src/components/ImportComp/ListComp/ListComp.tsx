@@ -10,12 +10,9 @@ import ProgressBar from '@/components/ProgressBar/ProgressBar';
 
 
 type ListComp = {
-   originPdfs: PDFType[]
+   pdfs: PDFType[]
 }
-type ProgressStateType = {
-   total: number,
-   currentNum: number
-}
+
 const headList = [
    {
       id: "title1",
@@ -55,7 +52,7 @@ const headList = [
    }
 ]
 
-function ListComp({ originPdfs }: ListComp) {
+function ListComp({ pdfs }: ListComp) {
    const importPdf = useAppSelector(state => state.importPdf)
    const dispatch = useAppDispatch()
    const [showProgress, setShowProgress] = useState(false)
@@ -78,9 +75,10 @@ function ListComp({ originPdfs }: ListComp) {
    }
 
    function genBody() {
-      return originPdfs.map(item => <ListItem key={item.id} id={item.id} file={item.file} />)
+      return pdfs.map(item => <ListItem key={item.id} id={item.id} file={item.file} />)
    }
 
+   // 取消选中
    function cancelSelected() {
       if (importPdf.selectedIds.length === 0) return
       const temp = [...importPdf.selectedIds]
@@ -110,7 +108,7 @@ function ListComp({ originPdfs }: ListComp) {
    }
 
 
-   if (!originPdfs || originPdfs.length === 0) return <div></div>
+   if (!pdfs || pdfs.length === 0) return <div></div>
    return (
       <div className='wrapper-list'>
          {
@@ -130,7 +128,7 @@ function ListComp({ originPdfs }: ListComp) {
          </div>
          <Row>
             <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
-               <span className='tip-span'>总共{originPdfs.length}项</span>
+               <span className='tip-span'>总共{pdfs.length}项</span>
             </Col>
             <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
                <Button className='submit-btn-selected'>提交选中</Button>

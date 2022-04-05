@@ -16,21 +16,21 @@ const { confirm } = Modal;
 
 function ImportComp() {
     const maxCount = 80;
-    const [pdfFiles, setPdfFiles] = useState<PDFType[]>([]);
-    const [currentPage, setCurrentPage] = useState(1)
     const id = new Id()
+    
+    const [pdfs, setPdfs] = useState<PDFType[]>([]);
     const importState = useAppSelector(state => state.importPdf)
     const dispatch = useAppDispatch()
 
 
     // 删除取消的项
     useEffect(() => {
-        const temp = [...pdfFiles]
+        const temp = [...pdfs]
         importState.cancelIds.forEach(cancelId => {
             let i = temp.findIndex(pdf => pdf.id === cancelId)
             temp.splice(i, 1)
         })
-        setPdfFiles(temp)
+        setPdfs(temp)
     }, [importState.cancelIds])
 
     const uploadProps = {
@@ -42,21 +42,21 @@ function ImportComp() {
         beforeUpload: (file: RcFile) => { // 返回false，实现手动上传
             const isPDF = file.type === 'application/pdf';
             if (isPDF) {
-                setPdfFiles(state => [...state, { file, id: id.genId(file.name) }])
+                setPdfs(state => [...state, { file, id: id.genId(file.name) }])
             } else message.error(`${file.name} 不是一个pdf格式文件`);
             return false;
         }
     }
 
-    function showConfirm() {
-        if (pdfFiles.length === 0) message.info("没有导入文件哦")
+    function clear() {
+        if (pdfs.length === 0) message.info("没有导入文件哦")
         else {
             confirm({
                 title: '是否清空?',
                 icon: <ExclamationCircleOutlined />,
                 content: '清除所有已导入的信息',
                 onOk() {
-                    setPdfFiles([])
+                    setPdfs([])
                     dispatch(setTargetPDF(null))
                 },
                 onCancel() {
@@ -69,7 +69,7 @@ function ImportComp() {
         {importState.targetPDF ? <PdfReader pdf={importState.targetPDF}></PdfReader> : ""}
         <Row justify="end">
             <Col xs={10} sm={12} md={12} lg={12} xl={12}>
-                <Button onClick={showConfirm} icon={<ClearOutlined />}>清空</Button>
+                <Button onClick={clear} icon={<ClearOutlined />}>清空</Button>
             </Col>
             <Col xs={14} sm={12} md={12} lg={12} xl={12}>
                 <Upload multiple {...uploadProps}>
@@ -80,12 +80,12 @@ function ImportComp() {
         <Divider />
         {/* 内容主体 */}
         <Row className='middle-pdf-edit'>
-            <ListComp originPdfs={pdfFiles}></ListComp>
+            <ListComp pdfs={pdfs}></ListComp>
         </Row>
         <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 {
-                    pdfFiles.length === 0 ?
+                    pdfs.length === 0 ?
                         <h2>选择pdf文献上传</h2> : ""
                 }
             </Col>

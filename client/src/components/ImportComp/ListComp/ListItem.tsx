@@ -20,12 +20,13 @@ const options = [
 
 function ListItem(pdf: PDFType) {
    const dateFormat = 'YYYY/MM/DD';
-   const dispatch = useAppDispatch()
    const [datePicker, setDatePicker] = useState(moment())
    const [author, setAuthor] = useState("")
    const [periodical, setPeriodical] = useState("")
    const [lastModify, setLastModify] = useState(moment())
    const [type, setType] = useState(['Journal Article'])
+
+   const dispatch = useAppDispatch()
 
 
    function handleClick() {
@@ -48,7 +49,8 @@ function ListItem(pdf: PDFType) {
    }
 
    async function submit(showMessage?: boolean): Promise<boolean> {
-
+      console.log("执行上传");
+      
       if (showMessage === undefined) showMessage = true // 默认显示弹出上传结果信息
       const userName = localStorage.getItem("user");
       if (!userName) {
@@ -83,15 +85,6 @@ function ListItem(pdf: PDFType) {
          if (showMessage) message.error(`上传失败${result.data.message}`)
          return false
       }
-      // await (function () {
-      //    return new Promise((res, rej) => {
-      //       setTimeout(() => {
-      //          res("ok")
-      //       }, 300)
-      //    })
-      // })()
-      // cancel()
-      // return true
    }
 
    useEffect(() => {
@@ -100,10 +93,9 @@ function ListItem(pdf: PDFType) {
          id: pdf.id,
          args: [false]
       }
-
       pushSubmit(submiteItem)
       return () => {
-         clearItem(submiteItem)
+         // clearItem(submiteItem)
       }
    }, [])
 

@@ -6,21 +6,10 @@
 
 type SubmiteEvent = { submit: Function, id: string, args?: any[] }
 
-type FireProps = {
-   beforeSumit?: Function,
-   eachSubmit?: Function,   // 每次触发一个提交事件后的回调
-   afterAllSubmitted?: Function // 提交完所有事件之后的回调
-}
-
 // 保存了导入页面中，每一个提交按钮的事件
 export let submitEvents: SubmiteEvent[] = []
 
 const subscribes: Function[] = []
-
-
-
-
-
 
 
 // 中断falg
@@ -31,7 +20,6 @@ export function interrupt() {
 
 export { flag as interruptFlag };
 
-// 每一项push进去执行
 export function pushSubmit(item: SubmiteEvent) {
    submitEvents.push(item)
    subscribes.forEach(func => func(item, submitEvents))
@@ -40,7 +28,7 @@ export function onSubmitPush(func: Function) {
    subscribes.push(func)
 }
 
-// 清楚flag，如果有一项在列表中被清楚，那么循环的i需要减1
+// 清除flag，如果有一项在列表中被清除
 let clearIndex = -1;
 export function clearItem(submiteEvent: SubmiteEvent) {
    let index = submitEvents.findIndex(item => item.id === submiteEvent.id)
@@ -51,32 +39,43 @@ export function clearItem(submiteEvent: SubmiteEvent) {
 
 
 // 触发每一个提交按钮事件，用于实现提交所有功能
-export async function fireAllEvents(callBacksObj?: FireProps): Promise<boolean> {
+type FireProps = {
+   beforeSumit?: Function,
+   eachSubmit?: Function,   // 每次触发一个提交事件后的回调
+   afterAllSubmitted?: Function // 提交完所有事件之后的回调
+}
+export async function fireAllEvents(props?: FireProps): Promise<boolean> {
    flag = true
 
+   const completed: SubmiteEvent[] = []; // 记录已经上传完成的
    async function _loopEvents(): Promise<any> {
       for (let i = 0; i < submitEvents.length; i++) {
-         // 判断是否中断,中断后将剩余未提交的保留
+         // 判断是否中断
          if (!flag) {
             flag = null;
             return false
          }
          const item = submitEvents[i]
+         // 提交每一项
          const result = await item.submit.apply(null, item.args || [])
+         if (result) completed.push(item)
          // 执行回调
-         if (callBacksObj && callBacksObj.eachSubmit) callBacksObj.eachSubmit(result, item, i)
-
-         // 在循环中，如果清除了一项，i需要减1
-         if (clearIndex !== -1) {
-            clearIndex = -1
-            return _loopEvents()
-         }
+         if (props && props.eachSubmit) props.eachSubmit(result, item, i)
       }
-      if (callBacksObj && callBacksObj.afterAllSubmitted) callBacksObj.afterAllSubmitted(submitEvents)
+      if (props && props.afterAllSubmitted) props.afterAllSubmitted(submitEvents)
       return true
    }
-   return await _loopEvents()
+   const result = await _loopEvents()
+   // 清空已经上传完毕的项
+   clearCompleted(completed)
+   return result
 }
 
-
+// 清空已经上传的
+function clearCompleted(completed: SubmiteEvent[]) {
+   completed.forEach(cItem => {
+      const i = submitEvents.findIndex(sItem => sItem.id === cItem.id)
+      if(i !== -1) submitEvents.splice(i, 1)
+   })
+}
 

@@ -1,37 +1,9 @@
-const container = [];
+const arr = [1,2,3,4,5,6,7]
 
-function gen() {
-   return async function a() {
-      await (function () {
-         return new Promise((res, rej) => {
-            setTimeout(() => {
-               res("ok")
-            }, 1000)
-         })
-      })()
 
-      console.log("我爱你啊");
+function exec(){
+   for(let i in arr){
+      console.log(arr);
    }
 }
-
-for (let i = 0; i < 10; i++) {
-   container.push(gen())
-}
-
-
-
-async function exec() {
-   for (let i = 0; i < container.length; i++) {
-      await container[i]()
-   }
-   console.log("执行完毕");
-}
-
-// 使用for await
-async function printFiles() {
-   for await (const contents of container) {
-      console.log(contents)
-   }
-}
-
 exec()
