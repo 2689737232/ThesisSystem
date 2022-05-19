@@ -65,3 +65,6 @@ class PdfForm(ModelForm):
     class Meta:
         model = Pdf
         fields = '__all__'
+
+def clear_all_pdf():
+    Pdf.objects.all().delete()

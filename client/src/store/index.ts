@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import importPdfSlice from './features/importPdfSlice'
-import menuReducer from "./features/menuSlice"
-import searchSlice from './features/searchSlice'
+import importPdfSlice from './importPdfSlice'
+import menuReducer from "./menuSlice"
+import searchSlice from './searchSlice'
 
 const store = configureStore({
    reducer: {

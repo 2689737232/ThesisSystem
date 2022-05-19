@@ -14,6 +14,7 @@ from .decorators.permission_required import permission_required
 from django.db import transaction
 from .view.Function import gen_init_function
 from .view.Menu import gen_init_menu
+
 # Create your views here.
 
 
@@ -98,7 +99,7 @@ class AuthView(View):
                 else:
                     save_id = transaction.savepoint()
                     # 添加用户
-                    user = addUser(user_no=user_no,
+                    user = add_user(user_no=user_no,
                                    password=password,
                                    role=role,
                                    name=name,
@@ -115,7 +116,7 @@ class AuthView(View):
 
 
 # 向数据库中添加用户
-def addUser(user_no, password, role, name,  age, save_id):
+def add_user(user_no, password, role, name,  age, save_id):
     if age is None:
         age = 0
     if name is None:

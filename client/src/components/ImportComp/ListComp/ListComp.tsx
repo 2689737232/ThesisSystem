@@ -3,7 +3,7 @@ import { Button, Checkbox, Col, Divider, message, Popconfirm, Row } from 'antd';
 import { spawn } from 'child_process';
 import "./ListComp.less";
 import ListItem from './ListItem';
-import { PDFType, setCancelIds, setSelectedIds } from '@/features/importPdfSlice';
+import { PDFType, setCancelIds, setSelectedIds } from '@/store/importPdfSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { fireAllEvents, onSubmitPush, submitEvents } from '../SubmitHandler';
 import ProgressBar from '@/components/ProgressBar/ProgressBar';

@@ -15,11 +15,12 @@ class User(models.Model):
     # 自定义主键，使用了primary_key后python不会再自动的添加
     id = models.BigAutoField(primary_key=True)
     # 学号、角色、名字、年龄、密码（加密）
-    no = models.CharField(max_length=12, unique=True)
-    role = models.SmallIntegerField(choices=ROLE, default=3)
+    no = models.CharField(max_length=12, unique=True, verbose_name='学号')
+    role = models.SmallIntegerField(choices=ROLE, default=3, verbose_name='角色')
     name = models.CharField(max_length=5, default="", verbose_name="用户名")
     age = models.IntegerField(default=0, verbose_name="用户年龄")
     password_bcrypt = models.CharField(
+        verbose_name='密码(加密)',
         max_length=150, null=False)
 
     class Meta:

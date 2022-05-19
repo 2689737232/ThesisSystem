@@ -1,5 +1,5 @@
 import { uploadPDF } from '@/api/upload';
-import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/features/importPdfSlice';
+import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/store/importPdfSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getUserInfo } from '@/util/user';
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';

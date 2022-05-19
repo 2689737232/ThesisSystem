@@ -4,7 +4,7 @@ import { CopyOutlined, SolutionOutlined, UploadOutlined, UserOutlined, VideoCame
 import "./MenuComp.less"
 import { getMenuList } from '@/api/menu';
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks"
-import { pushMenuQueue, setActiveMenu, setMenuQueue, setSearchMenuItem } from '@/features/menuSlice';
+import { pushMenuQueue, setActiveMenu, setMenuQueue, setSearchMenuItem } from '@/store/menuSlice';
 import menuNameMap from '../MenuNameMap';
 
 

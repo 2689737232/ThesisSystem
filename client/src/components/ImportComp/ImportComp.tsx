@@ -8,7 +8,7 @@ import "./ImportComp.less";
 import ListComp from './ListComp/ListComp';
 import Id from '@/util/Id';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
-import { PDFType, setCancelIds, setTargetPDF } from '@/features/importPdfSlice';
+import { PDFType, setCancelIds, setTargetPDF } from '@/store/importPdfSlice';
 import PdfReader from '../PdfReader/PdfReader';
 import { interruptFlag } from './SubmitHandler';
 const { confirm } = Modal;
@@ -17,7 +17,7 @@ const { confirm } = Modal;
 function ImportComp() {
     const maxCount = 80;
     const id = new Id()
-    
+
     const [pdfs, setPdfs] = useState<PDFType[]>([]);
     const importState = useAppSelector(state => state.importPdf)
     const dispatch = useAppDispatch()
@@ -40,8 +40,7 @@ function ImportComp() {
         uploading: false,
         showUploadList: false,
         beforeUpload: (file: RcFile) => { // 返回false，实现手动上传
-            const isPDF = file.type === 'application/pdf';
-            if (isPDF) {
+            if (file.type === 'application/pdf') {
                 setPdfs(state => [...state, { file, id: id.genId(file.name) }])
             } else message.error(`${file.name} 不是一个pdf格式文件`);
             return false;

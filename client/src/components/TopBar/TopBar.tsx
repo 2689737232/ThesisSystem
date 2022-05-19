@@ -4,10 +4,10 @@ import "./TopBar.less"
 import { logOut } from '@/util/user';
 const { Search } = Input;
 import { useNavigate } from "react-router";
-import { pushMenuQueue, setActiveMenu } from '@/features/menuSlice';
+import { pushMenuQueue, setActiveMenu } from '@/store/menuSlice';
 import { useAppSelector } from '@/hooks/reduxHooks';
 import { useDispatch } from 'react-redux';
-import { setkeyWords } from '@/features/searchSlice';
+import { setkeyWords } from '@/store/searchSlice';
 
 type TopBarProps = {
    userName: string

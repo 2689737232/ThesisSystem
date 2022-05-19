@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import "./PdfReader.less"
 import * as pdfjsLib from 'pdfjs-dist';
 import { useAppDispatch } from '@/hooks/reduxHooks';
-import { setTargetPDF } from '@/features/importPdfSlice';
+import { setTargetPDF } from '@/store/importPdfSlice';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
 

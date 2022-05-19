@@ -1,7 +1,7 @@
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { Button, message, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { setActiveMenu, setMenuQueue } from '../../features/menuSlice';
+import { setActiveMenu, setMenuQueue } from '../../store/menuSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import MyArticle from '../MyMyArticle/MyMyArticle';
 import { MenuType } from '../MenuComp/MenuComp';
