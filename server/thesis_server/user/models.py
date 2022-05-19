@@ -4,9 +4,7 @@ from django.db import models
 import jwt
 
 
-# Create your models here.
-
-
+# Create your models here
 class User(models.Model):
     ROLE = (
         (1, 'super_user'),

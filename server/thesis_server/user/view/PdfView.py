@@ -97,7 +97,7 @@ class Pdf(APIView):
 class PdfPages(APIView):
     @permission_required(2)
     def get(self, request, *args, **kwords):
-        # 请求文章类型  1为所有文章  2为我的文章 3为我的收藏
+        # 请求文章类型  1为我的文章  2为所有文章 3为我的收藏
         articles_type = request.query_params.get("articlesType", "-1")
 
         if articles_type == "-1":

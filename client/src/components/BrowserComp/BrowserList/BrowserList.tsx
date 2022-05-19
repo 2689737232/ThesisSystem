@@ -69,7 +69,7 @@ function BrowserList(props: BrowserList) {
    const [columns, setColumns] = useState(columnsInit)
    const [data, setData] = useState([]);
    const [pagination, setPagination] = useState({
-      current: 1,
+      current: 1,  // 当前页码、页容量
       pageSize: 10,
       showSizeChanger: false
    })
@@ -80,20 +80,7 @@ function BrowserList(props: BrowserList) {
    function onSelectChange(selectedRowKeys: any) {
       setSelectedRowKeys(selectedRowKeys)
    }
-   const rowSelection: TableRowSelection<React.Key[]> = {
-      selectedRowKeys,
-      onChange: onSelectChange,
-      onSelect: function (record: { [key: string]: any }, selected, selectedRows, nativeEvent) {
-         // 发送网络请求更新收藏列表
-         if (selected) {
-            const articleId = record.id;
-         } else {
-         }
-         console.log(record, selected, selectedRows, nativeEvent);
-      },
-      columnTitle: "收藏",
-      columnWidth: "5%"
-   };
+   const rowSelection: TableRowSelection<React.Key[]> = {};
 
 
    const handleTableChange = async (pagination: TablePaginationConfig, filters: any, sorter: any) => {
@@ -114,16 +101,12 @@ function BrowserList(props: BrowserList) {
 
    };
 
-   const fetch = (params = {}) => {
-      setLoading(false)
-   };
-
 
    useEffect(() => {
       if (!props.showCollection) {
          setColumns(pre => pre.filter(item => item.title !== "收藏"))
       }
-      renderArticles(pagination.current, pagination.pageSize)
+      renderArticles(pagination.current - 1, pagination.pageSize)
       setArticlesCount()
    }, [])
 
@@ -164,6 +147,8 @@ function BrowserList(props: BrowserList) {
    async function setArticlesCount() {
       const data = await getArticlesCount(props.browserType)
       const count = data?.data?.data?.count
+      console.log(count, "文章总数");
+      
       if (count) {
          setPagination(preState => {
             return {
@@ -174,13 +159,13 @@ function BrowserList(props: BrowserList) {
       }
    }
 
-   function onHeaderRow(columns: any, index: any) {
-      return {
-         onClick: () => {
-            console.log(columns, index);
-         }, // 点击表头行
-      };
-   }
+   // function onHeaderRow(columns: any, index: any) {
+   //    return {
+   //       onClick: () => {
+   //          console.log(columns, index);
+   //       }, // 点击表头行
+   //    };
+   // }
 
    return (
       <div className='browser-list-container'>

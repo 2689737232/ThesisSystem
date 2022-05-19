@@ -49,8 +49,6 @@ function ListItem(pdf: PDFType) {
    }
 
    async function submit(showMessage?: boolean): Promise<boolean> {
-      console.log("执行上传");
-      
       if (showMessage === undefined) showMessage = true // 默认显示弹出上传结果信息
       const userName = localStorage.getItem("user");
       if (!userName) {
