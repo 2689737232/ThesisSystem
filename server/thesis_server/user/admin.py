@@ -28,8 +28,7 @@ class UserAdmin(admin.ModelAdmin):
         if type(obj) is User:
             try:
                 user: User = obj
-                user.password_bcrypt = encryption(obj.password_bcrypt)
-                add_user(user_no=user.no, password=user.password_bcrypt,
+                add_user(user_no=user.no, password=obj.password_bcrypt,
                          role=user.role, name=user.name,  age=user.age, save_id=save_id)
             except BaseException as be:
                 print("注册服务错误", be)
