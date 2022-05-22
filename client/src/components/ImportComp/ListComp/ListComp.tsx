@@ -7,58 +7,19 @@ import { PDFType, setCancelIds, setSelectedIds } from '@/store/importPdfSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { fireAllEvents, onSubmitPush, submitEvents } from '../SubmitHandler';
 import ProgressBar from '@/components/ProgressBar/ProgressBar';
+import ListHead from './ListHead';
+import ListBody from './ListBody';
 
-
-type ListComp = {
+export type ListCompProps = {
    pdfs: PDFType[]
 }
 
-const headList = [
-   {
-      id: "title1",
-      name: "选中",
-      class: "header-select",
-      comp: <div> <Checkbox />选中</div>
-   },
-   {
-      id: "title2",
-      name: "作者",
-      class: "header-author"
-   },
-   {
-      id: "title3",
-      name: "年份",
-      class: "header-year"
-   },
-   {
-      id: "title4",
-      name: "标题",
-      class: "header-title"
-   },
-   {
-      id: "title5",
-      name: "期刊",
-      class: "header-periodical"
-   },
-   {
-      id: "title6",
-      name: "最后更新",
-      class: "header-last-modify"
-   },
-   {
-      id: "title7",
-      name: "文献类型",
-      class: "header-type"
-   }
-]
-
-function ListComp({ pdfs }: ListComp) {
+function ListComp({ pdfs }: ListCompProps) {
    const importPdf = useAppSelector(state => state.importPdf)
    const dispatch = useAppDispatch()
    const [showProgress, setShowProgress] = useState(false)
    const [total, setTotal] = useState(submitEvents.length)
    const [currentNum, setCurrentNum] = useState(0)
-
 
    useEffect(() => {
       onSubmitPush(function (item: SubmitEvent, subs: SubmitEvent[]) {
@@ -70,9 +31,7 @@ function ListComp({ pdfs }: ListComp) {
       }
    }, [])
 
-   function genHead() {
-      return headList.map(item => <th key={item.id} className={`${item.class} head-item`}>{item.comp ? item.comp : item.name}</th>)
-   }
+
 
    function genBody() {
       return pdfs.map(item => <ListItem key={item.id} id={item.id} file={item.file} />)
@@ -116,14 +75,8 @@ function ListComp({ pdfs }: ListComp) {
          }
          <div className='list-comp'>
             <table style={{ borderCollapse: "separate", borderSpacing: "0px 10px" }}>
-               <thead>
-                  <tr>
-                     {genHead()}
-                  </tr>
-               </thead>
-               <tbody className='tbody-list'>
-                  {genBody()}
-               </tbody>
+               <ListHead />
+               <ListBody pdfs={pdfs} />
             </table>
          </div>
          <Row>

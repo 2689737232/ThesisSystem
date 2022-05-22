@@ -1,14 +1,13 @@
 import { uploadPDF } from '@/api/upload';
-import { PDFType, pushId, removeId, setCancelIds, setSelectedIds, setShowMask, setTargetPDF } from '@/store/importPdfSlice';
+import { PDFType, pushId, removeId, setCancelIds, setShowMask, setTargetPDF } from '@/store/importPdfSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getUserInfo } from '@/util/user';
-import { UserOutlined, LoadingOutlined } from '@ant-design/icons';
-import { Button, Cascader, Checkbox, DatePicker, Input, message, Spin } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { Button, Cascader, Checkbox, DatePicker, Input, message } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import Item from 'antd/lib/list/Item';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { clearItem, pushSubmit, submitEvents } from '../SubmitHandler';
+import { pushSubmit } from '../SubmitHandler';
 import "./ListItem.less"
 
 const options = [
@@ -19,11 +18,13 @@ const options = [
 ]
 
 function ListItem(pdf: PDFType) {
+   // 日期、格式
    const dateFormat = 'YYYY/MM/DD';
    const [datePicker, setDatePicker] = useState(moment())
+   const [lastModify, setLastModify] = useState(moment())
+   // 作者、期刊、文章类型  
    const [author, setAuthor] = useState("")
    const [periodical, setPeriodical] = useState("")
-   const [lastModify, setLastModify] = useState(moment())
    const [type, setType] = useState(['Journal Article'])
 
    const dispatch = useAppDispatch()
@@ -116,7 +117,7 @@ function ListItem(pdf: PDFType) {
             <DatePicker value={lastModify} onChange={(date: moment.Moment | null) => date ? setLastModify(date) : null} defaultValue={moment(new Date(), dateFormat)} format={dateFormat} />
          </td>
          <td>
-            <Cascader value={type} onChange={(value: any) => { setType([value as string]) }} options={options} placeholder="请选择"></Cascader>
+            <Cascader value={type} onChange={(value: any) => { setType([value as string]) }} options={options} placeholder="请选择" />
          </td>
          <td>
             <Button onClick={cancel}>取消</Button>

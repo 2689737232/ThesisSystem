@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Upload, Button, Row, Col, message, Divider, Modal, Pagination } from 'antd';
 import { UploadOutlined, ClearOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { RcFile, UploadChangeParam } from 'antd/lib/upload';
-import { request } from '@/api/base';
-import { uploadPDF } from '@/api/upload';
+import { RcFile } from 'antd/lib/upload';
 import "./ImportComp.less";
-import ListComp from './ListComp/ListComp';
 import Id from '@/util/Id';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
-import { PDFType, setCancelIds, setTargetPDF } from '@/store/importPdfSlice';
+import { PDFType, setTargetPDF } from '@/store/importPdfSlice';
 import PdfReader from '../PdfReader/PdfReader';
-import { interruptFlag } from './SubmitHandler';
+import ListComp from './ListComp/ListComp';
 const { confirm } = Modal;
 
 
 function ImportComp() {
-    const maxCount = 80;
+    const maxCount = 80;  //最大上传量
     const id = new Id()
 
     const [pdfs, setPdfs] = useState<PDFType[]>([]);
@@ -33,17 +30,20 @@ function ImportComp() {
         setPdfs(temp)
     }, [importState.cancelIds])
 
+    // 上传组件属性，点击事件、文件类型等配置
     const uploadProps = {
         action: "localhost:8000",
         accept: "application/pdf",
         maxCount,
         uploading: false,
         showUploadList: false,
-        beforeUpload: (file: RcFile) => { // 返回false，实现手动上传
+        beforeUpload: (file: RcFile) => {
             if (file.type === 'application/pdf') {
                 setPdfs(state => [...state, { file, id: id.genId(file.name) }])
-            } else message.error(`${file.name} 不是一个pdf格式文件`);
-            return false;
+            } else {
+                message.error(`${file.name} 不是一个pdf格式文件`);
+            }
+            return false; // 返回false，实现手动上传
         }
     }
 
@@ -78,9 +78,6 @@ function ImportComp() {
         </Row>
         <Divider />
         {/* 内容主体 */}
-        <Row className='middle-pdf-edit'>
-            <ListComp pdfs={pdfs}></ListComp>
-        </Row>
         <Row>
             <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                 {
@@ -88,6 +85,9 @@ function ImportComp() {
                         <h2>选择pdf文献上传</h2> : ""
                 }
             </Col>
+        </Row>
+        <Row className='middle-pdf-edit'>
+            <ListComp pdfs={pdfs}></ListComp>
         </Row>
     </div>;
 }

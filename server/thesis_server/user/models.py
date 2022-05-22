@@ -7,7 +7,7 @@ import jwt
 # Create your models here
 class User(models.Model):
     ROLE = (
-        (1, 'super_user'),
+        (1, 'admin'),
         (2, 'teacher'),
         (3, 'student'),
         (4, 'tourist')

@@ -9,13 +9,18 @@ from user.views import add_user
 """
  判断是否是添加用户
 """
+
+
 def is_add_user_action(request, obj):
     # 对象为User且请求地址以 add 开头，算作是添加用户操作
     return type(obj) is User and request.path.endswith('add')
 
+
 """
  自定义admin
 """
+
+
 class UserAdmin(admin.ModelAdmin):
     fieldsets = (
         ('用户基本信息', {'fields': ['no', 'role', 'name', 'age']}),
@@ -36,15 +41,12 @@ class UserAdmin(admin.ModelAdmin):
                 print("注册服务错误", be)
                 if save_id is not None:
                     transaction.savepoint_rollback(save_id)
-
         else:
             super().save_model(request, obj, form, change)
 
-
+admin.site.site_header = "论文管理后台"
+admin.site.index_title = "用户管理"
 admin.site.register(User, UserAdmin)
 admin.site.register(UserMenus, UserAdmin)
 admin.site.register(UserFunctions, UserAdmin)
-admin.site.site_header = "论文管理后台"
-admin.site.index_title = "用户管理"
-
 
