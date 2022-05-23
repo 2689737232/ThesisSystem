@@ -15,10 +15,10 @@ es_host = "http://localhost:9200"
 client = Elasticsearch(es_host)
 pdf_abs_dir = r"E:\VSProject\v-project\ThesisSystem\server\thesis_server\pdfs"
 
+
 def test():
     print(get_pdf_nodel_from_search(search_by_keyword("前端")))
-    
-        
+
 
 def upload_to_elasticsearch(user_id, pdf_id, pdf):
     base64_pdf = base64.b64encode(pdf).decode("ascii")
@@ -33,6 +33,8 @@ def upload_to_elasticsearch(user_id, pdf_id, pdf):
         print(e)
 
 # https://www.jb51.net/article/156935.htm
+
+
 def search_by_keyword(word):
     result = client.search(index="thesis_system", size=10, body={
         "query": {
@@ -44,14 +46,22 @@ def search_by_keyword(word):
             }
         }
     })
-    return result.body['hits']['hits'] 
+    return result.body['hits']['hits']
 
 # 从elastsearch查询结果中，在mysql中找到对于数据
+
+
 def get_pdf_nodel_from_search(search_result):
     result = []
     for i in search_result:
         result.append(i['_source']['pdf_id'])
     return PdfModel.objects.filter(pk__in=result)
 
+
 def delete_all():
-    client.delete_by_query(index="thesis_system")
+    client.delete_by_query(index="thesis_system", body={
+        "query": {
+            "match_all": {
+            }
+        }
+    })

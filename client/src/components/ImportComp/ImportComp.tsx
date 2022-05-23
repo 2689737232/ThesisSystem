@@ -17,19 +17,20 @@ function ImportComp() {
 
     // 论文文件保存在内存中，由redux保存论文的id信息
     const [pdfs, setPdfs] = useState<PDFType[]>([]);
-    const importState = useAppSelector(state => state.importPdf)
+    const cancelIds = useAppSelector(state => state.importPdf.cancelIds)
     const dispatch = useAppDispatch()
-
 
     // 删除取消的项
     useEffect(() => {
         const temp = [...pdfs]
-        importState.cancelIds.forEach(cancelId => {
+        cancelIds.forEach(cancelId => {
             let i = temp.findIndex(pdf => pdf.id === cancelId)
             temp.splice(i, 1)
         })
+        console.log(temp);
+        
         setPdfs(temp)
-    }, [importState.cancelIds])
+    }, [cancelIds])
 
     // 上传组件属性，点击事件、文件类型等配置
     const uploadProps = {
@@ -40,7 +41,7 @@ function ImportComp() {
         showUploadList: false,
         beforeUpload: (file: RcFile) => {
             if (file.type === 'application/pdf') {
-                if(file.size / 1024 / 1024 > 20){
+                if (file.size / 1024 / 1024 > 20) {
                     message.error(`${file.name}文件超过20mb`)
                     return false
                 }
@@ -70,7 +71,7 @@ function ImportComp() {
         }
     }
     return <div className='import-container'>
-        {importState.targetPDF ? <PdfReader pdf={importState.targetPDF}></PdfReader> : ""}
+        {/* {targetPDF ? <PdfReader pdf={targetPDF}></PdfReader> : ""} */}
         <Row justify="end">
             <Col xs={10} sm={12} md={12} lg={12} xl={12}>
                 <Button onClick={clear} icon={<ClearOutlined />}>清空</Button>

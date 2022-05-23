@@ -21,7 +21,7 @@ function ListComp({ pdfs }: ListCompProps) {
 
    const importPdf = useAppSelector(state => state.importPdf)
    const dispatch = useAppDispatch()
-   
+
    useEffect(() => {
       onSubmitPush(function (item: SubmitEvent, subs: SubmitEvent[]) {
          setTotal(subs.length)
@@ -47,13 +47,19 @@ function ListComp({ pdfs }: ListCompProps) {
          eachSubmit: (result: boolean, item: SubmitEvent, i: number) => {
             if (result) setCurrentNum(pre => pre + 1)
          },
-         afterAllSubmitted: (submiteEvent: SubmitEvent[]) => {
-            message.info("全部上传完毕")
-            setShowProgress(false)
-            setTotal(0)
+         afterAllSubmitted: ({ completed, incomplete }: { completed: SubmitEvent[]; incomplete: SubmitEvent[]; }) => {
+            if (incomplete.length === 0) {
+               message.info("全部上传完毕")
+               setTotal(0)
+            } else {
+               message.error(`剩余${incomplete.length}上传失败！`)
+               setTotal(incomplete.length)
+            }
             setCurrentNum(0)
+            setShowProgress(false)
          }
       })
+
       if (!result) {  // 如果中断了，取消显示，重新设置
          setShowProgress(false)
          setTotal(submitEvents.length)
