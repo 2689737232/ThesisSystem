@@ -35,7 +35,8 @@ function ListItem(pdf: PDFType) {
       dispatch(setShowMask(true))
    }
 
-   function onChange(e: CheckboxChangeEvent) {
+   // 复选框事件
+   function onChecked(e: CheckboxChangeEvent) {
       if (e.target.checked) {
          dispatch(pushId(pdf.id))
       } else {
@@ -50,19 +51,13 @@ function ListItem(pdf: PDFType) {
    }
 
    async function submit(showMessage?: boolean): Promise<boolean> {
-      if (showMessage === undefined) showMessage = true // 默认显示弹出上传结果信息
-      const userName = localStorage.getItem("user");
-      if (!userName) {
-         message.error('没有用户信息，请重新登录！');
+      if (showMessage === undefined) showMessage = true // 默认显示弹出上传结果信息,批量上传时设置隐藏
+      const { token, state, message: myMessage } = await getUserInfo()
+      if (!state) {
+         message.error(myMessage);
          return false
       }
-
-      const { token } = await getUserInfo()
       const userId = token.data.no
-      if (!userId) {
-         message.error('没有用户信息，请重新登录！');
-         return false
-      }
 
       // 构建formData上传数据
       var formdata = new FormData();
@@ -101,7 +96,7 @@ function ListItem(pdf: PDFType) {
    return (
       <tr className='bpdy-tr'>
          <td>
-            <Checkbox onChange={onChange} />
+            <Checkbox onChange={onChecked} />
          </td>
          <td>
             <Input value={author} onChange={(e) => setAuthor(e.target.value)} className='input-author' placeholder="作者姓名" prefix={<UserOutlined />} />

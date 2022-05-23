@@ -15,12 +15,13 @@ export type ListCompProps = {
 }
 
 function ListComp({ pdfs }: ListCompProps) {
-   const importPdf = useAppSelector(state => state.importPdf)
-   const dispatch = useAppDispatch()
    const [showProgress, setShowProgress] = useState(false)
    const [total, setTotal] = useState(submitEvents.length)
    const [currentNum, setCurrentNum] = useState(0)
 
+   const importPdf = useAppSelector(state => state.importPdf)
+   const dispatch = useAppDispatch()
+   
    useEffect(() => {
       onSubmitPush(function (item: SubmitEvent, subs: SubmitEvent[]) {
          setTotal(subs.length)
@@ -30,12 +31,6 @@ function ListComp({ pdfs }: ListCompProps) {
          setShowProgress(false)
       }
    }, [])
-
-
-
-   function genBody() {
-      return pdfs.map(item => <ListItem key={item.id} id={item.id} file={item.file} />)
-   }
 
    // 取消选中
    function cancelSelected() {

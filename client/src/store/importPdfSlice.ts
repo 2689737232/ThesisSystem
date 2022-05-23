@@ -8,10 +8,10 @@ type InitStateType = {
    importSlice: PDFType[],
    targetPDF: File | null,
    showMask: boolean,
-   selectedIds: string[]  // 复选框选中的上传pdf,
+   selectedIds: string[]      // 复选框选中的上传pdf,
    cancelIds: string[],
    loadingAnimate: boolean,
-   uploadIds: string[],        // 需要上传的文件id
+   uploadIds: string[],      // 需要上传的文件id
    uploadLock: boolean       // 上传锁，如果正在上传中，不能导入新的文件
 }
 const initialState: InitStateType = {

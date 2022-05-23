@@ -4,8 +4,9 @@ import { LoadingOutlined } from '@ant-design/icons';
 import "./ProgressBar.less";
 import { interrupt } from '../ImportComp/SubmitHandler';
 
+type ProgressBarProps = { total: number, currentNum: number }
 
-function ProgressBar(props: { total: number, currentNum: number }) {
+function ProgressBar(props: ProgressBarProps) {
    let percent: string | number = props.currentNum / props.total
    if (Number.isNaN(percent)) percent = 0
    percent = (percent * 100).toFixed(2)

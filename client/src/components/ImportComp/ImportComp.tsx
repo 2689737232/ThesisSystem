@@ -12,9 +12,10 @@ const { confirm } = Modal;
 
 
 function ImportComp() {
-    const maxCount = 80;  //最大上传量
+    const maxCount = 20;  //最大上传量
     const id = new Id()
 
+    // 论文文件保存在内存中，由redux保存论文的id信息
     const [pdfs, setPdfs] = useState<PDFType[]>([]);
     const importState = useAppSelector(state => state.importPdf)
     const dispatch = useAppDispatch()
@@ -39,6 +40,10 @@ function ImportComp() {
         showUploadList: false,
         beforeUpload: (file: RcFile) => {
             if (file.type === 'application/pdf') {
+                if(file.size / 1024 / 1024 > 20){
+                    message.error(`${file.name}文件超过20mb`)
+                    return false
+                }
                 setPdfs(state => [...state, { file, id: id.genId(file.name) }])
             } else {
                 message.error(`${file.name} 不是一个pdf格式文件`);
