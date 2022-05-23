@@ -5,6 +5,7 @@
 import base64
 from genericpath import isdir
 from importlib.resources import path
+from multiprocessing.dummy import Array
 from operator import index
 import os
 from pydoc import cli
@@ -17,7 +18,7 @@ pdf_abs_dir = r"E:\VSProject\v-project\ThesisSystem\server\thesis_server\pdfs"
 
 
 def test():
-    print(get_pdf_nodel_from_search(search_by_keyword("前端")))
+    print(get_pdf_model_from_search(search_by_keyword("前端")))
 
 
 def upload_to_elasticsearch(user_id, pdf_id, pdf):
@@ -51,7 +52,7 @@ def search_by_keyword(word):
 # 从elastsearch查询结果中，在mysql中找到对于数据
 
 
-def get_pdf_nodel_from_search(search_result):
+def get_pdf_model_from_search(search_result):
     result = []
     for i in search_result:
         result.append(i['_source']['pdf_id'])
@@ -67,16 +68,16 @@ def delete_all():
     })
 
 
-def recommend():
+def get_recommend_elastic_list(key_words: Array):
     result = client.search(index="thesis_system", size=10, body={
         "query": {
             "more_like_this": {
                 "fields": ["attachment.title", "attachment.content"],
                 "analyzer": "ik_smart",
-                "like": ["推荐系统"],
+                "like": key_words,
                 "min_term_freq": 1,
                 "max_query_terms": 12,
             }
         }
     })
-    return result
+    return result.body['hits']['hits']

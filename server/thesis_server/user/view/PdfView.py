@@ -10,8 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
 from user.model.PdfModel import UserCollectPdfs, UserHistory
-from user.elasticsearch import search_by_keyword, get_pdf_nodel_from_search
-from user.elasticsearch import recommend
+from user.elasticsearch import search_by_keyword, get_pdf_model_from_search
+from user.elasticsearch import get_recommend_elastic_list
 
 # 上传pdf，获取pdf
 
@@ -201,7 +201,7 @@ class Search(APIView):
         if key_words == "":
             return result(code=MyCode.paramserror, message="搜索关键字不能为空")
 
-        pdfs = get_pdf_nodel_from_search(search_by_keyword(key_words))
+        pdfs = get_pdf_model_from_search(search_by_keyword(key_words))
         pdfs = gen_list(pdfs)
         return result(code=200, message="ok", data=pdfs)
 
@@ -215,14 +215,28 @@ class Recommend(APIView):
     def get(self, request, *args, **kwords):
         user_no = get_token(request).get("no", "")
 
+        # 获取用户浏览文章关键字排名前10位
         history_pdf = PdfModel.objects.filter(
             user_history=User.objects.get(no=user_no)
-        )
-        recommend()
-        # for pdf in history_pdf:
-        #     pdf_title = pdf.dict_props["title"][0:-4] # 移除末尾的 .pdf，当前固定为[文件名.pdf]格式
-        #     print(extract_tags(pdf_title, withWeight=True))
-        return result(code=MyCode.ok, message="ok", data=gen_list(history_pdf))
+        )[:10]
+        key_word_dict = {}
+        if len(history_pdf) == 0:
+            return result(MyCode.ok, message="还没有浏览记录哦", data=[])
+             
+        for pdf in history_pdf:
+            # 移除末尾的 .pdf，当前固定为[文件名.pdf]格式
+            pdf_title = pdf.dict_props["title"][0:-4]
+            key_word_tuple = extract_tags(pdf_title, withWeight=True)
+            for item in key_word_tuple:
+                if key_word_dict.get(item[0]) is not None:
+                    key_word_dict[item[0]] += 1
+                else:
+                    key_word_dict[item[0]] = 1
+        tuple_list = tuple(zip(key_word_dict.keys(), key_word_dict.values()))
+        tuple_list = sorted(tuple_list, key=lambda tup: tup[1], reverse=True)[:10]
+        key_list = [t[0] for t in tuple_list]
+        pdf_list = get_pdf_model_from_search(get_recommend_elastic_list(key_list))
+        return result(code=MyCode.ok, message="ok", data=gen_list(pdf_list))
 
     def post(self, request, *args, **kwords):
         pass

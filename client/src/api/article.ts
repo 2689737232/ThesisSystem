@@ -18,13 +18,15 @@ export type RequestArticleParams = {
    keyWords?: string
 }
 
+// 获取文章页 【搜索】【推荐】
 export async function getArticles(params: RequestArticleParams, errorCB?: Function) {
    let result = null
-   if (params.articlesType === 4 || params.articlesType === 5) {
-      if(params.articlesType === 5) params.keyWords = "css"
+   if (params.articlesType === 4) {
       result = request.get("/user/search", {
          params
       })
+   } else if (params.articlesType === 5) {
+      result = request.get("/user/recommend")
    } else {
       result = request.get("/user/pdf", {
          params
@@ -66,3 +68,4 @@ export async function searchArticle(keyWords: string) {
       }
    })
 }
+
