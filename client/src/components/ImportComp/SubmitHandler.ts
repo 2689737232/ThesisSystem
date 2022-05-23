@@ -48,6 +48,8 @@ export async function fireAllEvents(props?: FireProps): Promise<boolean> {
    flag = true
 
    const completed: SubmiteEvent[] = []; // 记录已经上传完成的
+   const incomplete: SubmiteEvent[] = []; // 记录未上传完成的
+
    async function _loopEvents(): Promise<any> {
       for (let i = 0; i < submitEvents.length; i++) {
          // 判断是否中断
@@ -56,13 +58,15 @@ export async function fireAllEvents(props?: FireProps): Promise<boolean> {
             return false
          }
          const item = submitEvents[i]
-         // 提交每一项
-         const result = await item.submit.apply(null, item.args || [])
-         if (result) completed.push(item)
-         // 执行回调
-         if (props && props.eachSubmit) props.eachSubmit(result, item, i)
+         // 提交每一项，[可能]提交成功
+         const hasUploaded: boolean = await item.submit.apply(null, item.args || [])
+
+         if (hasUploaded) completed.push(item)
+         else incomplete.push(item)
+
+         if (props && props.eachSubmit) props.eachSubmit(hasUploaded, item, i)
       }
-      if (props && props.afterAllSubmitted) props.afterAllSubmitted(submitEvents)
+      if (props && props.afterAllSubmitted) props.afterAllSubmitted({ completed, incomplete })
       return true
    }
    const result = await _loopEvents()
@@ -75,7 +79,7 @@ export async function fireAllEvents(props?: FireProps): Promise<boolean> {
 function clearCompleted(completed: SubmiteEvent[]) {
    completed.forEach(cItem => {
       const i = submitEvents.findIndex(sItem => sItem.id === cItem.id)
-      if(i !== -1) submitEvents.splice(i, 1)
+      if (i !== -1) submitEvents.splice(i, 1)
    })
 }
 

@@ -31,7 +31,7 @@ def permission_required(level):
                     return result(code=401, message="token已经过期")
                 except jwt.InvalidTokenError:
                     return result(code=401, message="无效的token")
-                except Exception as e:
+                except BaseException as e:
                     print("请求错误", e)
                     return result(code=401, message="服务器异常")
         return _wrapped_view

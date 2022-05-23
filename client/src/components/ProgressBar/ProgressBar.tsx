@@ -80,7 +80,7 @@ function ProgressBar(props: ProgressBarProps) {
             </div>
          </div>
       </div>
-   );
+   )
 }
 
 export default ProgressBar;

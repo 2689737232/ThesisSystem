@@ -32,7 +32,7 @@ function ListItem(pdf: PDFType) {
 
    function handleClick() {
       dispatch(setTargetPDF(pdf.file))
-      dispatch(setShowMask(true))
+      // dispatch(setShowMask(true))
    }
 
    // 复选框事件
@@ -69,8 +69,9 @@ function ListItem(pdf: PDFType) {
       formdata.append("periodical", periodical);
       formdata.append("last_modify", lastModify.format("yyyy-MM-DD"));
       formdata.append("article_type", type[0]);
-
       const result = await uploadPDF(formdata)
+     
+      
       if (result.data.code === 200) {
          cancel()
          if (showMessage) message.success(`上传c成功`)

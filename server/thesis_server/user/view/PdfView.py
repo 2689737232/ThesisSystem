@@ -1,10 +1,6 @@
 from atexit import unregister
 from cmath import e
 import code
-from email import errors
-from http.cookies import CookieError
-import imp
-from msilib.schema import Error
 from user.elasticsearch import upload_to_elasticsearch
 
 from .Token import get_token
@@ -16,10 +12,12 @@ from django.views.decorators.csrf import csrf_exempt
 from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
 from user.model.PdfModel import UserCollectPdfs, UserHistory
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from user.elasticsearch import search_by_keyword,get_pdf_nodel_from_search
+
+from user.elasticsearch import search_by_keyword, get_pdf_nodel_from_search
 
 # 上传pdf，获取pdf
+
+
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Pdf(APIView):
 
@@ -33,9 +31,11 @@ class Pdf(APIView):
         last_modify = request.POST['last_modify']
         article_type = request.POST['article_type']
 
-        pdf: InMemoryUploadedFile = request.FILES['pdf']
+        pdf = request.FILES.get('pdf', None)
 
-        if user_id is not None:
+        if user_id is not None and pdf is not None:
+            if pdf.size / 1024 / 1024 > 20:
+                return result(message="上传失败", code=MyCode.paramserror)
             user = User.objects.filter(no=user_id).first()
             try:
                 pdf_model = PdfModel.objects.create(
@@ -52,9 +52,10 @@ class Pdf(APIView):
                 upload_to_elasticsearch(
                     user_id=pdf_model.user_id,
                     pdf_id=pdf_model.id,
-                    pdf=pdf.file.getvalue()
+                    pdf=pdf.read()
                 )
-            except Error as e:
+            except Exception as e:
+                print("上传错误: ", e)
                 return result(message="上传失败", code=MyCode.servererror)
         return result(message="上传成功", data=pdf_title)
 
@@ -192,7 +193,6 @@ class PdfHistory(APIView):
                 return result(message="添加浏览记录成功,pdf: " + pdf_id)
             else:
                 return result(message="已浏览该文章")
-
 
 
 # 搜索文章
