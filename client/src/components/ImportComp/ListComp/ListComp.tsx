@@ -52,7 +52,7 @@ function ListComp({ pdfs }: ListCompProps) {
                message.info("全部上传完毕")
                setTotal(0)
             } else {
-               message.error(`剩余${incomplete.length}上传失败！`)
+               message.error(`${incomplete.length}项上传失败！`)
                setTotal(incomplete.length)
             }
             setCurrentNum(0)

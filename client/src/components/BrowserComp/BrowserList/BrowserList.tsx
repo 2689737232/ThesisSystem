@@ -76,12 +76,7 @@ function BrowserList(props: BrowserList) {
    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
    const [loading, setLoading] = useState(true)
 
-   //  复选框选中、取消事件
-   function onSelectChange(selectedRowKeys: any) {
-      setSelectedRowKeys(selectedRowKeys)
-   }
    const rowSelection: TableRowSelection<React.Key[]> = {};
-
 
    const handleTableChange = async (pagination: TablePaginationConfig, filters: any, sorter: any) => {
       if (pagination.current && pagination.pageSize) {
@@ -133,7 +128,6 @@ function BrowserList(props: BrowserList) {
       })
 
       if (response.data.data) {
-         console.log(response.data.data.articles);
          setData(response.data.data.articles)
          setLoading(false)
          return true
@@ -147,7 +141,6 @@ function BrowserList(props: BrowserList) {
    async function setArticlesCount() {
       const data = await getArticlesCount(props.browserType)
       const count = data?.data?.data?.count
-      console.log(count, "文章总数");
       
       if (count) {
          setPagination(preState => {
@@ -158,14 +151,6 @@ function BrowserList(props: BrowserList) {
          })
       }
    }
-
-   // function onHeaderRow(columns: any, index: any) {
-   //    return {
-   //       onClick: () => {
-   //          console.log(columns, index);
-   //       }, // 点击表头行
-   //    };
-   // }
 
    return (
       <div className='browser-list-container'>

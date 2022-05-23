@@ -50,8 +50,6 @@ function ProgressBar(props: ProgressBarProps) {
       }
    }
 
-
-   // 
    function cancel() {
       interrupt()
       setVisible(false)

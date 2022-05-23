@@ -4,7 +4,7 @@ from . import views
 from .view.Menu import Menu
 from .view.Function import Function
 from .view.Token import Token
-from .view.PdfView import Pdf, PdfPages, PdfCollections, Search,  PdfHistory
+from .view.PdfView import Pdf, PdfPages, PdfCollections, Recommend, Search,  PdfHistory
 from .view.ElastisearchView import ElasticSearchView
 urlpatterns = [
     path("", views.Index.as_view(), name="index"),
@@ -17,5 +17,6 @@ urlpatterns = [
     path("history", PdfHistory.as_view(), name="pdf_history"),
     path("token", Token.as_view(), name="token"),
     path("search", Search.as_view(), name="search_pdf"),
-    path("es", ElasticSearchView.as_view(), name="elasticSearch_view")
+    path("es", ElasticSearchView.as_view(), name="elasticSearch_view"),
+    path("recommend", Recommend.as_view(), name="recommend_view"),
 ]

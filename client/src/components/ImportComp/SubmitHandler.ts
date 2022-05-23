@@ -36,8 +36,6 @@ export function clearItem(submiteEvent: SubmiteEvent) {
    clearIndex = index
 }
 
-
-
 // 触发每一个提交按钮事件，用于实现提交所有功能
 type FireProps = {
    beforeSumit?: Function,

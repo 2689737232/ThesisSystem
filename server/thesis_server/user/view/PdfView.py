@@ -1,8 +1,6 @@
-from atexit import unregister
-from cmath import e
-import code
+import imp
+from jieba.analyse import *
 from user.elasticsearch import upload_to_elasticsearch
-
 from .Token import get_token
 from util.result import result, MyCode
 from rest_framework.views import APIView
@@ -12,8 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from user.model.PdfModel import Pdf as PdfModel
 from user.models import User
 from user.model.PdfModel import UserCollectPdfs, UserHistory
-
 from user.elasticsearch import search_by_keyword, get_pdf_nodel_from_search
+from user.elasticsearch import recommend
 
 # 上传pdf，获取pdf
 
@@ -215,7 +213,16 @@ class Search(APIView):
 @method_decorator(decorator=[csrf_exempt], name="dispatch")
 class Recommend(APIView):
     def get(self, request, *args, **kwords):
-        pass
+        user_no = get_token(request).get("no", "")
+
+        history_pdf = PdfModel.objects.filter(
+            user_history=User.objects.get(no=user_no)
+        )
+        recommend()
+        # for pdf in history_pdf:
+        #     pdf_title = pdf.dict_props["title"][0:-4] # 移除末尾的 .pdf，当前固定为[文件名.pdf]格式
+        #     print(extract_tags(pdf_title, withWeight=True))
+        return result(code=MyCode.ok, message="ok", data=gen_list(history_pdf))
 
     def post(self, request, *args, **kwords):
         pass

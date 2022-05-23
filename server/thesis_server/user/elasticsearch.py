@@ -65,3 +65,18 @@ def delete_all():
             }
         }
     })
+
+
+def recommend():
+    result = client.search(index="thesis_system", size=10, body={
+        "query": {
+            "more_like_this": {
+                "fields": ["attachment.title", "attachment.content"],
+                "analyzer": "ik_smart",
+                "like": ["推荐系统"],
+                "min_term_freq": 1,
+                "max_query_terms": 12,
+            }
+        }
+    })
+    return result
