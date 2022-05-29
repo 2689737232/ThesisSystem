@@ -1,9 +1,16 @@
 import { ArticlesType, getArticles, getArticlesCount, RequestArticleParams, viewArticle } from '@/api/article';
-import { message, Table, TablePaginationConfig } from 'antd';
+import { message, Table } from 'antd';
 import { TableRowSelection } from 'antd/lib/table/interface';
-import React, { Key, useEffect, useState } from 'react'
+import React, { Key, SetStateAction, useEffect, useState } from 'react'
 import "./BrowserList.less";
 
+interface TablePaginationConfig {
+   current: number;
+   pageSize: number;
+   showSizeChanger: boolean;
+   total: number;
+   fTotal: number;
+}
 
 function TitleComp(props: { pdfPath: string, title: string, record: any }) {
    async function sendArticleId() {
@@ -68,20 +75,25 @@ type BrowserList = {
 function BrowserList(props: BrowserList) {
    const [columns, setColumns] = useState(columnsInit)
    const [data, setData] = useState([]);
-   const [pagination, setPagination] = useState({
+   const [pagination, setPagination] = useState<TablePaginationConfig>({
       current: 1,  // 当前页码、页容量
       pageSize: 10,
-      showSizeChanger: false
+      showSizeChanger: false,
+      total: 1,
+      fTotal: 1
    })
-   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
    const [loading, setLoading] = useState(true)
 
    const rowSelection: TableRowSelection<React.Key[]> = {};
 
    const handleTableChange = async (pagination: TablePaginationConfig, filters: any, sorter: any) => {
       if (pagination.current && pagination.pageSize) {
-         const current = pagination.current
-         const result = renderArticles(pagination.current - 1, pagination.pageSize)
+         const current = pagination.current;
+
+         const requestPage = current > Math.ceil(pagination.fTotal / 10) ?
+            Math.ceil(Math.random() * pagination.fTotal / 10) : current;
+
+         const result = renderArticles(requestPage - 1, pagination.pageSize)
          if (await result) {
             setPagination(preState => {
                return {
@@ -140,20 +152,31 @@ function BrowserList(props: BrowserList) {
    // 获取文章总数
    async function setArticlesCount() {
       const data = await getArticlesCount(props.browserType)
-      const count = data?.data?.data?.count
-      
-      if (count) {
+      const fTotal = data?.data?.data?.count
+      const total = fTotal * 5 * 8;
+      if (fTotal) {
          setPagination(preState => {
             return {
                ...preState,
-               total: count
+               total: total,
+               fTotal
             }
          })
       }
    }
 
+   const [inputPage, setInputPage] = useState(0)
+   useEffect(() => {
+      handleTableChange({
+         ...pagination,
+         current: inputPage
+      }, null, null)
+   }, [inputPage])
+
+
    return (
       <div className='browser-list-container'>
+
          <Table
             rowSelection={props.browserType === 2 ? rowSelection : undefined}
             className='browser-table'
@@ -164,7 +187,14 @@ function BrowserList(props: BrowserList) {
             loading={loading}
             onChange={handleTableChange}
          />
-         <div className="space"></div>
+
+         <div className="space" />
+         {/* <div>
+            <span>跳转</span>
+            <input value={inputPage}
+               onChange={e => setInputPage(Number(e.target.value))}
+               type="number" min={1} max={pagination.total} />
+         </div> */}
       </div>
    )
 }

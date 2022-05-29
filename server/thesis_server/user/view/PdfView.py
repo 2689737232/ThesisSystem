@@ -218,23 +218,24 @@ class Recommend(APIView):
         # 获取用户浏览文章关键字排名前10位
         history_pdf = PdfModel.objects.filter(
             user_history=User.objects.get(no=user_no)
-        )[:10]
+        )
+        print(len(history_pdf), '浏览数') 
         key_word_dict = {}
         if len(history_pdf) == 0:
             return result(MyCode.ok, message="还没有浏览记录哦", data=[])
-             
         for pdf in history_pdf:
             # 移除末尾的 .pdf，当前固定为[文件名.pdf]格式
             pdf_title = pdf.dict_props["title"][0:-4]
-            key_word_tuple = extract_tags(pdf_title, withWeight=True)
+            key_word_tuple = extract_tags(pdf_title, withWeight=True, topK=10)
             for item in key_word_tuple:
                 if key_word_dict.get(item[0]) is not None:
                     key_word_dict[item[0]] += 1
                 else:
                     key_word_dict[item[0]] = 1
         tuple_list = tuple(zip(key_word_dict.keys(), key_word_dict.values()))
-        tuple_list = sorted(tuple_list, key=lambda tup: tup[1], reverse=True)[:10]
+        tuple_list = sorted(tuple_list, key=lambda tup: tup[1], reverse=True)
         key_list = [t[0] for t in tuple_list]
+        print(key_list, '文章记录') 
         pdf_list = get_pdf_model_from_search(get_recommend_elastic_list(key_list))
         return result(code=MyCode.ok, message="ok", data=gen_list(pdf_list))
 

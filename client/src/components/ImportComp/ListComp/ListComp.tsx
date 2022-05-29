@@ -84,9 +84,9 @@ function ListComp({ pdfs }: ListCompProps) {
             <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
                <span className='tip-span'>总共{pdfs.length}项</span>
             </Col>
-            <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
+            {/* <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
                <Button className='submit-btn-selected'>提交选中</Button>
-            </Col>
+            </Col> */}
             <Col className='bottom-item' xs={12} sm={6} md={6} lg={6} xl={6}>
                <Button onClick={cancelSelected} className='cancel-btn-selected'>取消选中</Button>
             </Col>

@@ -95,9 +95,9 @@ function Login() {
                            <Button onClick={login} className='btn-item' type="primary">登录</Button>
                         </div>
                      </div>
-                     <div className="forget-pwd">
+                     {/* <div className="forget-pwd">
                         <Button block>忘记密码</Button>
-                     </div>
+                     </div> */}
                   </Col>
                </Row>) :
                (<Row className={'register-box'}>

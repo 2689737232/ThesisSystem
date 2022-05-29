@@ -72,11 +72,11 @@ def get_recommend_elastic_list(key_words: Array):
     result = client.search(index="thesis_system", size=10, body={
         "query": {
             "more_like_this": {
-                "fields": ["attachment.title", "attachment.content"],
+                "fields": ["attachment.content"],
                 "analyzer": "ik_smart",
                 "like": key_words,
                 "min_term_freq": 1,
-                "max_query_terms": 12,
+                # "max_query_terms": 50,  # 一条查询语句中允许最多查询词语的个数，默认是25
             }
         }
     })
